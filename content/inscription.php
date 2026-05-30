@@ -3,7 +3,7 @@
  * inscription.php - Inscription d'un nouveau client
  */
 if (isset($_SESSION['client_id'])) {
-    header('Location: /index_.php?page=mon_compte');
+    header('Location: ./index_.php?page=mon_compte');
     exit();
 }
 
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $clientDAO->insert($client);
                 $success = "Compte créé avec succès ! Vous pouvez vous connecter.";
             } catch (Exception $e) {
-                $erreur = "Erreur lors de la création du compte.";
+                $erreur = "Erreur : " . $e->getMessage(); // ← affiche le vrai message
             }
         }
     }
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php elseif ($success): ?>
                     <div class="alert alert-success">
                         <?= htmlspecialchars($success) ?>
-                        <a href="/index_.php?page=connexion">Se connecter</a>
+                        <a href="./index_.php?page=connexion">Se connecter</a>
                     </div>
                 <?php endif; ?>
 
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="cgv" id="cgv" required>
                             <label class="form-check-label" for="cgv">
-                                J'accepte les <a href="/index_.php?page=cgv" target="_blank">Conditions Générales de Vente</a> *
+                                J'accepte les <a href="./index_.php?page=cgv" target="_blank">Conditions Générales de Vente</a> *
                             </label>
                         </div>
                     </div>

@@ -7,7 +7,7 @@
 header('Content-Type: application/json; charset=utf-8');
 
 // Inclusion des ressources nécessaires (sans session ni menu)
-require_once dirname(__DIR__, 2) . '/utils/all_includes.php';
+require_once dirname(__DIR__, 2) . '/php/utils/all_includes.php';
 
 $q = trim($_GET['q'] ?? '');
 

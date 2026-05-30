@@ -4,7 +4,7 @@
  * Vérifie si un code promo est valide et retourne son taux
  */
 header('Content-Type: application/json; charset=utf-8');
-require_once dirname(__DIR__, 2) . '/utils/all_includes.php';
+require_once dirname(__DIR__, 2) . '/php/utils/all_includes.php';
 
 $code = trim($_GET['code'] ?? '');
 

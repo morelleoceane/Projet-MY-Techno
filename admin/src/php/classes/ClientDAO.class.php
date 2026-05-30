@@ -20,8 +20,8 @@ class ClientDAO {
         foreach ($rows as $row) {
             $clients[] = new Client(
                 (int)$row['id_client'], $row['nom_client'], $row['prenom_client'],
-                $row['adresse_email'], $row['mot_de_passe'], $row['adresse'] ?? '',
-                (bool)$row['banni'], (bool)$row['cgv_acceptees']
+                $row['adresse_email'], $row['mot_de_passe'], $row['adresse_livraison'] ?? '',
+                (bool)$row['est_banni']
             );
         }
         return $clients;
@@ -35,8 +35,8 @@ class ClientDAO {
         if (!$row) return null;
         return new Client(
             (int)$row['id_client'], $row['nom_client'], $row['prenom_client'],
-            $row['adresse_email'], $row['mot_de_passe'], $row['adresse'] ?? '',
-            (bool)$row['banni'], (bool)$row['cgv_acceptees']
+            $row['adresse_email'], $row['mot_de_passe'], $row['adresse_livraison'] ?? '',
+            (bool)($row['est_banni'] ?? false), false
         );
     }
 
@@ -48,8 +48,8 @@ class ClientDAO {
         if (!$row) return null;
         return new Client(
             (int)$row['id_client'], $row['nom_client'], $row['prenom_client'],
-            $row['adresse_email'], $row['mot_de_passe'], $row['adresse'] ?? '',
-            (bool)$row['banni'], (bool)$row['cgv_acceptees']
+            $row['adresse_email'], $row['mot_de_passe'], $row['adresse_livraison'] ?? '',
+            (bool)$row['est_banni']
         );
     }
 
@@ -57,27 +57,27 @@ class ClientDAO {
     public function insert(Client $client): void {
         $mdpHash = password_hash($client->getMotDePasse(), PASSWORD_BCRYPT);
         $stmt = $this->pdo->prepare(
-            "SELECT inserer_client(:nom, :prenom, :email, :mdp)"
+            "SELECT inserer_client(:nom, :prenom, :email, :mdp, :adresse_livraison)"
         );
         $stmt->execute([
-            ':nom'    => $client->getNomClient(),
-            ':prenom' => $client->getPrenomClient(),
-            ':email'  => $client->getAdresseEmail(),
-            ':mdp'    => $mdpHash,
+            ':nom'     => $client->getNomClient(),
+            ':prenom'  => $client->getPrenomClient(),
+            ':email'   => $client->getAdresseEmail(),
+            ':mdp'     => $mdpHash,
+            ':adresse_livraison' => $client->getAdresse() ?? '',
         ]);
     }
 
     /** Modifie un client via fonction PL/pgSQL */
     public function update(Client $client): void {
         $stmt = $this->pdo->prepare(
-            "SELECT modifier_client(:id, :nom, :prenom, :email, :adresse)"
+            "SELECT modifier_client(:id, :nom, :prenom, :adresse_livraison)"
         );
         $stmt->execute([
             ':id'      => $client->getIdClient(),
             ':nom'     => $client->getNomClient(),
             ':prenom'  => $client->getPrenomClient(),
-            ':email'   => $client->getAdresseEmail(),
-            ':adresse' => $client->getAdresse(),
+            ':adresse_livraison' => $client->getAdresse(),
         ]);
     }
 

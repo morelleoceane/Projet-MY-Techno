@@ -13,9 +13,9 @@
             <div class="col-md-4 mb-3">
                 <h6 class="fw-bold">Liens utiles</h6>
                 <ul class="list-unstyled small">
-                    <li><a href="/index_.php?page=accueil" class="text-muted text-decoration-none">Accueil</a></li>
-                    <li><a href="/index_.php?page=catalogue" class="text-muted text-decoration-none">Catalogue</a></li>
-                    <li><a href="/index_.php?page=cgv" class="text-muted text-decoration-none">CGV</a></li>
+                    <li><a href="./index_.php?page=accueil" class="text-muted text-decoration-none">Accueil</a></li>
+                    <li><a href="./index_.php?page=catalogue" class="text-muted text-decoration-none">Catalogue</a></li>
+                    <li><a href="./index_.php?page=cgv" class="text-muted text-decoration-none">CGV</a></li>
                 </ul>
             </div>
             <div class="col-md-4 mb-3">

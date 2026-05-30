@@ -39,16 +39,19 @@ class CommandeDAO {
     }
 
     /** Crée une commande via PL/pgSQL, retourne l'id */
-    public function insert(Commande $c): int {
+    public function insert(Commande $commande): int {
         $stmt = $this->pdo->prepare(
-            "SELECT inserer_commande(:adresse, :type, :id_client) AS id"
+            "SELECT inserer_commande(:type, :adresse, :total, :cgv, :client) AS id"
         );
         $stmt->execute([
-            ':adresse'   => $c->getAdresseLivraison(),
-            ':type'      => $c->isTypeLivraison() ? 'true' : 'false',
-            ':id_client' => $c->getIdClient(),
+            ':type'    => $commande->isTypeLivraison(),
+            ':adresse' => $commande->getAdresseLivraison(),
+            ':total'   => $commande->getTotal(),  // voir ci-dessous
+            ':cgv'     => true,
+            ':client'  => $commande->getIdClient(),
         ]);
-        return (int)$stmt->fetch()['id'];
+        $row = $stmt->fetch();
+        return (int)$row['id'];
     }
 
     /** Modifie le statut via PL/pgSQL */
@@ -60,24 +63,32 @@ class CommandeDAO {
     /** Suppression (annulation) via PL/pgSQL - uniquement si non expédié */
     public function delete(int $id): bool {
         $commande = $this->findById($id);
-        if (!$commande || $commande->getStatut() === 'expedie') {
+        if (!$commande) {
             return false;
         }
-        $stmt = $this->pdo->prepare("SELECT supprimer_commande(:id)");
-        $stmt->execute([':id' => $id]);
-        return true;
+        $stmt = $this->pdo->prepare(
+            "SELECT annuler_commande(:id, :client) AS result"
+        );
+        $stmt->execute([
+            ':id'     => $id,
+            ':client' => $commande->getIdClient(),
+        ]);
+        $row = $stmt->fetch();
+        return (bool)$row['result'];
     }
 
     /** Ajoute une ligne de commande via PL/pgSQL */
     public function insertLigne(int $id_commande, int $id_article, int $qte, float $prix): void {
         $stmt = $this->pdo->prepare(
-            "SELECT inserer_ligne_commande(:cmd, :art, :qte, :prix)"
+            "SELECT inserer_ligne_commande(:qte, :prix, :taille, :couleur, :cmd, :art)"
         );
         $stmt->execute([
-            ':cmd'  => $id_commande,
-            ':art'  => $id_article,
-            ':qte'  => $qte,
-            ':prix' => $prix,
+            ':qte'    => $qte,
+            ':prix'   => $prix,
+            ':taille'  => '',   // non géré dans le panier, valeur vide par défaut
+            ':couleur' => '',   // idem
+            ':cmd'    => $id_commande,
+            ':art'    => $id_article,
         ]);
     }
 

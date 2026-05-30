@@ -41,8 +41,18 @@ body {
 
 /* ---------- Footer ---------- */
 .site-footer {
-    background: var(--color-primary);
-    color: #ccc;
+        background: #ffffff;
+        color: #222222;
+}
+
+.site-footer a {
+    color: #f9c74f;
+}
+
+
+.site-footer h5,
+.site-footer h6 {
+    color: #ffffff;
 }
 
 /* ---------- Article Cards ---------- */

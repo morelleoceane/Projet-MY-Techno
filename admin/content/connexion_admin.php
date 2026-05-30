@@ -3,7 +3,7 @@
  * connexion_admin.php - Connexion administrateur
  */
 if (isset($_SESSION['admin_id'])) {
-    header('Location: /admin/index_.php?page=accueil');
+    header('Location: ./index_.php?page=accueil');
     exit();
 }
 $erreur = '';
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($admin) {
             $_SESSION['admin_id']  = $admin->getIdAdmin();
             $_SESSION['admin_nom'] = $admin->getNomAdmin();
-            header('Location: /admin/index_.php?page=accueil');
+            header('Location: ./index_.php?page=accueil');
             exit();
         } else {
             $erreur = "Identifiants incorrects.";
@@ -38,12 +38,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
                 <form method="POST">
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Nom d'administrateur</label>
-                        <input type="text" name="nom_admin" class="form-control" required>
+                        <label class="form-label fw-semibold" for="nom_admin">Nom d'administrateur</label>
+                        <input type="text" name="nom_admin" id="nom_admin" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Mot de passe</label>
-                        <input type="password" name="mot_de_passe" class="form-control" required>
+                        <label class="form-label fw-semibold" for="mot_de_passe">Mot de passe</label>
+                        <input type="password" name="mot_de_passe" id="mot_de_passe" class="form-control" required>
                     </div>
                     <button type="submit" class="btn btn-danger w-100">Se connecter</button>
                 </form>

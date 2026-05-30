@@ -4,6 +4,7 @@
  * Point d'entrée unique pour :
  * - Démarrer la session
  * - Définir le chemin racine
+ * - Définir l'URL de base
  * - Autocharger toutes les classes du dossier classes/
  * - Inclure la connexion DB
  * Ce fichier est inclus dans CHAQUE index.php (public et admin)
@@ -11,6 +12,8 @@
 session_start();
 
 define('ROOT_PATH', dirname(__DIR__, 3)); // remonte jusqu'à /admin
+
+define('BASE_URL', '/Projet%20MY%20Techno/');
 
 // ========================
 // AUTOLOADING DES CLASSES

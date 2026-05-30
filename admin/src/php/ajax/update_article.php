@@ -5,8 +5,8 @@
  * via le tableau éditable admin
  */
 header('Content-Type: application/json; charset=utf-8');
-require_once dirname(__DIR__, 2) . '/utils/all_includes.php';
-require_once dirname(__DIR__, 2) . '/utils/check_connection.php';
+require_once dirname(__DIR__, 2) . '/php/utils/all_includes.php';
+require_once dirname(__DIR__, 2) . '/php/utils/check_connection.php';
 
 // Sécurité : admin uniquement
 if (!isset($_SESSION['admin_id'])) {

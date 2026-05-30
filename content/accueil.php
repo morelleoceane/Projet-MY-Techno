@@ -2,12 +2,24 @@
 /**
  * accueil.php - Page d'accueil publique
  */
+require_once __DIR__ . '/../admin/src/php/classes/Connection.class.php';
+require_once __DIR__ . '/../admin/src/php/classes/Article.class.php';
+require_once __DIR__ . '/../admin/src/php/classes/ArticleDAO.class.php';
+require_once __DIR__ . '/../admin/src/php/classes/CategorieArticleDAO.class.php';
+
 $articleDAO = new ArticleDAO();
 $articles   = $articleDAO->findActifs();
 $catDAO     = new CategorieArticleDAO();
 $categories = $catDAO->findAll();
 // Sélection des 4 articles vedettes
 $vedettes = array_slice($articles, 0, 4);
+$fallbackImages = [
+        'https://www.chaudici.com/images/color/Jean-Slim-Homme-Jeunesse-Slim-Tendance-Homme-Pantalon-2064-c00.jpg',
+        'https://img-lcwaikiki.mncdn.com/mnresize/1020/1360/pim/productimages/20231/6278147/v1/l_20231-s39518z8-dfl-98-76-97-189_a.jpg',
+        'https://robe-avenue.com/cdn/shop/files/preview_images/8e78043e6de74605aed210e2a4bab536.thumbnail.0000000000.jpg?v=1748275525&width=1000',
+        'https://www.mytheresa.com/media/1094/1238/100/44/P01121090.jpg',
+];
+
 ?>
 
 <!-- BANNIÈRE DYNAMIQUE -->
@@ -19,7 +31,7 @@ $vedettes = array_slice($articles, 0, 4);
                 <div>
                     <h1 class="display-4 fw-bold">Nouvelle Collection 2026</h1>
                     <p class="lead">Vêtements, Chaussures &amp; Accessoires pour tous les styles</p>
-                    <a href="/index_.php?page=catalogue" class="btn btn-warning btn-lg mt-2">
+                    <a href="./index_.php?page=catalogue" class="btn btn-warning btn-lg mt-2">
                         Découvrir le catalogue
                     </a>
                 </div>
@@ -31,7 +43,7 @@ $vedettes = array_slice($articles, 0, 4);
                 <div>
                     <h1 class="display-4 fw-bold">Soldes jusqu'à -50%</h1>
                     <p class="lead">Profitez de nos offres exclusives sur la mode femme &amp; homme</p>
-                    <a href="/index_.php?page=catalogue" class="btn btn-light btn-lg mt-2">
+                    <a href="./index_.php?page=catalogue" class="btn btn-light btn-lg mt-2">
                         Voir les offres
                     </a>
                 </div>
@@ -51,12 +63,12 @@ $vedettes = array_slice($articles, 0, 4);
     <h2 class="text-center mb-4">Nos Catégories</h2>
     <div class="row g-3 justify-content-center">
         <?php foreach ($categories as $cat): ?>
-        <div class="col-6 col-md-2">
-            <a href="/index_.php?page=catalogue&cat=<?= $cat->getIdCategorie() ?>"
-               class="btn btn-outline-dark w-100">
-                <?= htmlspecialchars($cat->getNomCategorie()) ?>
-            </a>
-        </div>
+            <div class="col-6 col-md-2">
+                <a href="./index_.php?page=catalogue&cat=<?= $cat->getIdCategorie() ?>"
+                   class="btn btn-outline-dark w-100">
+                    <?= htmlspecialchars($cat->getNomCategorie()) ?>
+                </a>
+            </div>
         <?php endforeach; ?>
     </div>
 </section>
@@ -65,28 +77,32 @@ $vedettes = array_slice($articles, 0, 4);
 <section class="mb-5">
     <h2 class="text-center mb-4">Articles Vedettes</h2>
     <div class="row g-4" id="articlesVedettes">
-        <?php foreach ($vedettes as $article): ?>
-        <div class="col-6 col-md-3">
-            <div class="card h-100 shadow-sm article-card">
-                <img src="/admin/assets/images/<?= htmlspecialchars($article->getPhoto()) ?>"
-                     class="card-img-top"
-                     alt="<?= htmlspecialchars($article->getLibelle()) ?>"
-                     onerror="this.src='/admin/assets/images/no_image.jpg'"
-                     style="height:220px; object-fit:cover;">
-                <div class="card-body d-flex flex-column">
-                    <h6 class="card-title"><?= htmlspecialchars($article->getLibelle()) ?></h6>
-                    <p class="text-muted small mb-1">
-                        <?= htmlspecialchars($article->getMarque()) ?> |
-                        Taille : <?= htmlspecialchars($article->getTaille()) ?>
-                    </p>
-                    <p class="fw-bold text-success fs-5 mt-auto">
-                        <?= number_format($article->getPrixUnitaire(), 2) ?> €
-                    </p>
-                    <a href="/index_.php?page=article_detail&id=<?= $article->getIdArticle() ?>"
-                       class="btn btn-dark btn-sm mt-2">Voir le produit</a>
+        <?php foreach ($vedettes as $index => $article):
+            $photo = $article->getPhoto();
+            $src = !empty($photo) && str_starts_with($photo, 'http')
+                    ? $photo
+                    : $fallbackImages[$index % count($fallbackImages)];
+            ?>
+            <div class="col-6 col-md-3">
+                <div class="card h-100 shadow-sm article-card">
+                    <img src="<?= $src ?>"
+                         class="card-img-top article-img"
+                         alt="<?= htmlspecialchars($article->getLibelle()) ?>"
+                         style="height:220px; object-fit:contain; object-position:center; width:100%; background:#f8f8f8;">
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-title"><?= htmlspecialchars($article->getLibelle()) ?></h6>
+                        <p class="text-muted small mb-1">
+                            <?= htmlspecialchars($article->getMarque()) ?> |
+                            Taille : <?= htmlspecialchars($article->getTaille()) ?>
+                        </p>
+                        <p class="fw-bold text-success fs-5 mt-auto">
+                            <?= number_format($article->getPrixUnitaire(), 2) ?> €
+                        </p>
+                        <a href="./index_.php?page=article_detail&id=<?= $article->getIdArticle() ?>"
+                           class="btn btn-dark btn-sm mt-2">Voir le produit</a>
+                    </div>
                 </div>
             </div>
-        </div>
         <?php endforeach; ?>
     </div>
 </section>

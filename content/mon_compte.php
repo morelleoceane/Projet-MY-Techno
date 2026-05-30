@@ -5,7 +5,7 @@
 require_once __DIR__ . '/../admin/src/php/utils/check_connection.php';
 checkClientConnecte();
 
-$clientDAO  = new ClientDAO();
+$clientDAO   = new ClientDAO();
 $commandeDAO = new CommandeDAO();
 $client = $clientDAO->findById($_SESSION['client_id']);
 
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profil'])) {
     $nom     = trim($_POST['nom'] ?? '');
     $prenom  = trim($_POST['prenom'] ?? '');
     $email   = trim($_POST['email'] ?? '');
-    $adresse = trim($_POST['adresse'] ?? '');
+    $adresse = trim($_POST['adresse_livraison'] ?? '');
 
     if (!$nom || !$prenom || !$email) {
         $erreur = "Nom, prénom et email sont obligatoires.";
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profil'])) {
             $success = "Profil mis à jour.";
             $client = $clientDAO->findById($_SESSION['client_id']);
         } catch (Exception $e) {
-            $erreur = "Erreur lors de la mise à jour.";
+            $erreur = "Erreur : " . $e->getMessage(); // ← affiche le vrai message
         }
     }
 }
@@ -56,23 +56,23 @@ $commandes = $commandeDAO->findByClient($client->getIdClient());
             <div class="card-body">
                 <form method="POST">
                     <div class="mb-2">
-                        <label class="form-label">Nom</label>
-                        <input type="text" name="nom" class="form-control"
+                        <label for="nom" class="form-label">Nom</label>
+                        <input type="text" id="nom" name="nom" class="form-control"
                                value="<?= htmlspecialchars($client->getNomClient()) ?>" required>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Prénom</label>
-                        <input type="text" name="prenom" class="form-control"
+                        <label for="prenom" class="form-label">Prénom</label>
+                        <input type="text" id="prenom" name="prenom" class="form-control"
                                value="<?= htmlspecialchars($client->getPrenomClient()) ?>" required>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control"
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" name="email" class="form-control"
                                value="<?= htmlspecialchars($client->getAdresseEmail()) ?>" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Adresse</label>
-                        <textarea name="adresse" class="form-control" rows="2"><?= htmlspecialchars($client->getAdresse()) ?></textarea>
+                        <label for="adresse" class="form-label">Adresse</label>
+                        <textarea id="adresse" name="adresse" class="form-control" rows="2"><?= htmlspecialchars($client->getAdresse()) ?></textarea>
                     </div>
                     <button type="submit" name="update_profil" class="btn btn-dark btn-sm w-100">
                         Sauvegarder
@@ -92,9 +92,9 @@ $commandes = $commandeDAO->findByClient($client->getIdClient());
                 <?php if (empty($commandes)): ?>
                     <p class="text-muted">Aucune commande pour l'instant.</p>
                 <?php else: ?>
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover">
-                        <thead>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead>
                             <tr>
                                 <th>#</th>
                                 <th>Date</th>
@@ -102,44 +102,48 @@ $commandes = $commandeDAO->findByClient($client->getIdClient());
                                 <th>Adresse</th>
                                 <th>Action</th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             <?php foreach ($commandes as $cmd): ?>
-                            <?php
-                            $statutBadge = match($cmd->getStatut()) {
-                                'en_attente' => 'warning',
-                                'validee'    => 'primary',
-                                'expedie'    => 'info',
-                                'livre'      => 'success',
-                                'annulee'    => 'danger',
-                                default      => 'secondary'
-                            };
-                            ?>
-                            <tr>
-                                <td><?= $cmd->getIdCommande() ?></td>
-                                <td><?= htmlspecialchars($cmd->getDateCommande()) ?></td>
-                                <td>
+                                <?php
+                                $statutBadge = match($cmd->getStatut()) {
+                                    'en_attente' => 'warning',
+                                    'validee', 'Validée' => 'primary',
+                                    'expedie',  'Expédiée' => 'info',
+                                    'livre',    'Livré'    => 'success',
+                                    'Annulée',  'annulee'  => 'danger',
+                                    default => 'secondary'
+                                };
+                                ?>
+                                <tr>
+                                    <td><?= $cmd->getIdCommande() ?></td>
+                                    <td><?= htmlspecialchars($cmd->getDateCommande()) ?></td>
+                                    <td>
                                     <span class="badge bg-<?= $statutBadge ?>">
                                         <?= ucfirst($cmd->getStatut()) ?>
                                     </span>
-                                </td>
-                                <td class="small"><?= htmlspecialchars(substr($cmd->getAdresseLivraison(), 0, 25)) ?>...</td>
-                                <td>
-                                    <?php if ($cmd->getStatut() !== 'expedie' && $cmd->getStatut() !== 'livre'): ?>
-                                    <a href="/index_.php?page=historique_commandes&annuler=<?= $cmd->getIdCommande() ?>"
-                                       class="btn btn-outline-danger btn-sm"
-                                       onclick="return confirm('Annuler cette commande ?')">
-                                        Annuler
-                                    </a>
-                                    <?php else: ?>
-                                    <span class="text-muted small">Non annulable</span>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td class="small"><?= htmlspecialchars(substr($cmd->getAdresseLivraison(), 0, 25)) ?>...</td>
+                                    <td>
+                                        <?php
+                                        $statut = $cmd->getStatut();
+                                        $annulable = !in_array($statut, ['expedie', 'Expédiée', 'livre', 'Livré', 'Annulée', 'annulee']);
+                                        ?>
+                                        <?php if ($annulable): ?>
+                                            <a href="./index_.php?page=historique_commandes&annuler=<?= $cmd->getIdCommande() ?>"
+                                               class="btn btn-outline-danger btn-sm"
+                                               onclick="return confirm('Annuler cette commande ?')">
+                                                Annuler
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="text-muted small">Non annulable</span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
                             <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
+                            </tbody>
+                        </table>
+                    </div>
                 <?php endif; ?>
             </div>
         </div>

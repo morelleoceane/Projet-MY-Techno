@@ -18,6 +18,6 @@ if (isset($_GET['annuler'])) {
             $_SESSION['msg_erreur'] = "Cette commande ne peut plus être annulée (déjà expédiée).";
         }
     }
-    header('Location: /index_.php?page=mon_compte');
+    header('Location: ./index_.php?page=mon_compte');
     exit();
 }

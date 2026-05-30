@@ -3,7 +3,7 @@
  * connexion.php - Page de connexion client
  */
 if (isset($_SESSION['client_id'])) {
-    header('Location: /index_.php?page=mon_compte');
+    header('Location: ./index_.php?page=mon_compte');
     exit();
 }
 
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['client_nom']   = $client->getNomClient();
                 $_SESSION['client_prenom']= $client->getPrenomClient();
                 $redirect = $_GET['redirect'] ?? 'mon_compte';
-                header('Location: /index_.php?page=' . $redirect);
+                header('Location: ./index_.php?page=' . $redirect);
                 exit();
             }
         } else {

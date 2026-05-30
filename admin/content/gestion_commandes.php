@@ -67,11 +67,13 @@ $commandes = $commandeDAO->findAll();
                 <td>
                     <form method="POST" class="d-flex gap-2">
                         <input type="hidden" name="id_commande" value="<?= $cmd->getIdCommande() ?>">
-                        <select name="statut" class="form-select form-select-sm">
+                        <select name="statut" id="statut_<?= $cmd->getIdCommande() ?>"
+                                class="form-select form-select-sm"
+                                aria-label="Changer le statut de la commande #<?= $cmd->getIdCommande() ?>">
                             <?php foreach (['en_attente','validee','expedie','livre','annulee'] as $s): ?>
-                            <option value="<?= $s ?>" <?= $cmd->getStatut() === $s ? 'selected' : '' ?>>
-                                <?= ucfirst($s) ?>
-                            </option>
+                                <option value="<?= $s ?>" <?= $cmd->getStatut() === $s ? 'selected' : '' ?>>
+                                    <?= ucfirst($s) ?>
+                                </option>
                             <?php endforeach; ?>
                         </select>
                         <button type="submit" name="changer_statut" class="btn btn-sm btn-dark">OK</button>

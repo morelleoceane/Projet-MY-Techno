@@ -84,24 +84,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <?php if (!$article_edit): ?>
                     <div class="mb-2">
-                        <label class="form-label">Code article *</label>
-                        <input type="text" name="code_article" class="form-control form-control-sm" required>
+                        <label class="form-label" for="code_article">Code article *</label>
+                        <input type="text" name="code_article" id="code_article" class="form-control form-control-sm" required>
                     </div>
                     <?php endif; ?>
 
                     <div class="mb-2">
-                        <label class="form-label">Libellé *</label>
-                        <input type="text" name="libelle" class="form-control form-control-sm" required
+                        <label class="form-label" for="libelle">Libellé *</label>
+                        <input type="text" name="libelle" id="libelle" class="form-control form-control-sm" required
                                value="<?= htmlspecialchars($article_edit?->getLibelle() ?? '') ?>">
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Prix unitaire (€) *</label>
-                        <input type="number" step="0.01" name="prix_unitaire" class="form-control form-control-sm" required
+                        <label class="form-label" for="prix_unitaire">Prix unitaire (€) *</label>
+                        <input type="number" step="0.01" name="prix_unitaire" id="prix_unitaire" class="form-control form-control-sm" required
                                value="<?= $article_edit?->getPrixUnitaire() ?? '' ?>">
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Catégorie *</label>
-                        <select name="id_categorie" class="form-select form-select-sm" required>
+                        <label class="form-label" for="id_categorie">Catégorie *</label>
+                        <select name="id_categorie" id="id_categorie" class="form-select form-select-sm" required>
                             <?php foreach ($categories as $cat): ?>
                             <option value="<?= $cat->getIdCategorie() ?>"
                                     <?= ($article_edit?->getIdCategorie() == $cat->getIdCategorie()) ? 'selected' : '' ?>>
@@ -111,28 +111,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </select>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Taille</label>
-                        <input type="text" name="taille" class="form-control form-control-sm"
+                        <label class="form-label" for="taille">Taille</label>
+                        <input type="text" name="taille" id="taille" class="form-control form-control-sm"
                                value="<?= htmlspecialchars($article_edit?->getTaille() ?? '') ?>">
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Couleur</label>
-                        <input type="text" name="couleur" class="form-control form-control-sm"
+                        <label class="form-label" for="couleur">Couleur</label>
+                        <input type="text" name="couleur" id="couleur" class="form-control form-control-sm"
                                value="<?= htmlspecialchars($article_edit?->getCouleur() ?? '') ?>">
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Marque</label>
-                        <input type="text" name="marque" class="form-control form-control-sm"
+                        <label class="form-label" for="marque">Marque</label>
+                        <input type="text" name="marque" id="marque" class="form-control form-control-sm"
                                value="<?= htmlspecialchars($article_edit?->getMarque() ?? '') ?>">
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Stock</label>
-                        <input type="number" name="stock" class="form-control form-control-sm" min="0"
+                        <label class="form-label" for="stock">Stock</label>
+                        <input type="number" name="stock" id="stock" class="form-control form-control-sm" min="0"
                                value="<?= $article_edit?->getStock() ?? 0 ?>">
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Photo (nom du fichier)</label>
-                        <input type="text" name="photo_principale" class="form-control form-control-sm"
+                        <label class="form-label" for="photo_principale">Photo (nom du fichier)</label>
+                        <input type="text" name="photo_principale" id="photo_principale" class="form-control form-control-sm"
                                value="<?= htmlspecialchars($article_edit?->getPhoto() ?? '') ?>"
                                placeholder="ex: jean_slim.jpg">
                     </div>

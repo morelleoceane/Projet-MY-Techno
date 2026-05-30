@@ -15,7 +15,7 @@ class ArticleDAO {
             (int)$row['id_article'], $row['code_article'], $row['libelle'],
             $row['photo_principale'] ?? '', (float)$row['prix_unitaire'],
             $row['taille'] ?? '', $row['couleur'] ?? '', $row['marque'] ?? '',
-            (int)$row['stock'], (bool)$row['actif'], (int)$row['id_categorie']
+            (int)$row['stock'], (bool)$row['est_actif'], (int)$row['id_categorie']
         );
     }
 
@@ -44,7 +44,7 @@ class ArticleDAO {
         ?string $couleur = null, ?string $marque = null,
         ?float $prix_min = null, ?float $prix_max = null
     ): array {
-        $sql = "SELECT * FROM article WHERE actif=TRUE";
+        $sql = "SELECT * FROM article WHERE est_actif=TRUE";
         $params = [];
         if ($id_cat !== null) {
             $sql .= " AND id_categorie = :cat";

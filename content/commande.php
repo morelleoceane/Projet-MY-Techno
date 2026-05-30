@@ -7,7 +7,7 @@ checkClientConnecte();
 
 $panier = $_SESSION['panier'] ?? [];
 if (empty($panier)) {
-    header('Location: /index_.php?page=panier');
+    header('Location: ./index_.php?page=panier');
     exit();
 }
 
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $erreur = "Vous devez accepter les CGV pour confirmer la commande.";
     } else {
         try {
-            $commande = new Commande(0, '', $type_livraison, '', $adresse, 'en_attente', $client->getIdClient());
+            $commande = new Commande(0, '', $type_livraison, '', $adresse, 'en_attente', $client->getIdClient(),$total_final);
             $idCmd = $commandeDAO->insert($commande);
             // Insérer les lignes
             foreach ($panier as $item) {

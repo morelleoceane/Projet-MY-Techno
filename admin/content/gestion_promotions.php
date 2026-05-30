@@ -59,20 +59,20 @@ $promotions = $promoDAO->findAll();
                 <form method="POST">
                     <input type="hidden" name="id_promotion" value="<?= $promo_edit?->getIdPromotion() ?? 0 ?>">
                     <div class="mb-3">
-                        <label class="form-label">Code promo *</label>
-                        <input type="text" name="code_promo" class="form-control" required
+                        <label class="form-label" for="code_promo">Code promo *</label>
+                        <input type="text" name="code_promo" id="code_promo" class="form-control" required
                                value="<?= htmlspecialchars($promo_edit?->getCodePromo() ?? '') ?>">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Taux de remise (%) *</label>
-                        <input type="number" name="taux_remise" class="form-control" min="1" max="100" required
+                        <label class="form-label" for="taux_remise">Taux de remise (%) *</label>
+                        <input type="number" name="taux_remise" id="taux_remise" class="form-control" min="1" max="100" required
                                value="<?= $promo_edit?->getTauxRemise() ?? '' ?>">
                     </div>
                     <button type="submit" class="btn btn-warning w-100">
                         <?= $promo_edit ? 'Modifier' : 'Créer' ?>
                     </button>
                     <?php if ($promo_edit): ?>
-                    <a href="?page=gestion_promotions" class="btn btn-outline-secondary btn-sm w-100 mt-2">Annuler</a>
+                        <a href="?page=gestion_promotions" class="btn btn-outline-secondary btn-sm w-100 mt-2">Annuler</a>
                     <?php endif; ?>
                 </form>
             </div>

@@ -13,22 +13,27 @@
             <ul class="navbar-nav me-auto gap-2">
                 <li class="nav-item">
                     <a class="nav-link <?= ($_GET['page']??'')==='accueil'?'active':'' ?>"
-                       href="/admin/index_.php?page=accueil">Tableau de bord</a>
+                       href="<?= BASE_URL ?>admin/index_.php?page=accueil">Tableau de bord</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/index_.php?page=gestion_articles">Articles</a>
+                    <a class="nav-link <?= ($_GET['page']??'')==='gestion_articles'?'active':'' ?>"
+                       href="<?= BASE_URL ?>admin/index_.php?page=gestion_articles">Articles</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/index_.php?page=gestion_commandes">Commandes</a>
+                    <a class="nav-link <?= ($_GET['page']??'')==='gestion_commandes'?'active':'' ?>"
+                       href="<?= BASE_URL ?>admin/index_.php?page=gestion_commandes">Commandes</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/index_.php?page=gestion_clients">Clients</a>
+                    <a class="nav-link <?= ($_GET['page']??'')==='gestion_clients'?'active':'' ?>"
+                       href="<?= BASE_URL ?>admin/index_.php?page=gestion_clients">Clients</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/index_.php?page=gestion_promotions">Promotions</a>
+                    <a class="nav-link <?= ($_GET['page']??'')==='gestion_promotions'?'active':'' ?>"
+                       href="<?= BASE_URL ?>admin/index_.php?page=gestion_promotions">Promotions</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/index_.php?page=deconnexion_admin">Déconnexion</a>
+                    <a class="nav-link"
+                       href="<?= BASE_URL ?>admin/index_.php?page=deconnexion_admin">Déconnexion</a>
                 </li>
             </ul>
         </div>
