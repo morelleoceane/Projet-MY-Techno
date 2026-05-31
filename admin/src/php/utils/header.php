@@ -14,8 +14,8 @@ $isClient = isset($_SESSION['client_id']);
     <title>ModeShopping – Vêtements, Chaussures &amp; Accessoires</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="/admin/assets/css/style.css">
-    <link rel="stylesheet" href="/admin/assets/css/custom.css">
+    <link rel="stylesheet" href="./admin/assets/css/style.css">
+    <link rel="stylesheet" href="./admin/assets/css/custom.css">
 </head>
 <body>
 <header class="site-header">
@@ -44,7 +44,7 @@ $isClient = isset($_SESSION['client_id']);
                 <a href="./index_.php?page=deconnexion" class="text-white"><i class="bi bi-box-arrow-right fs-4"></i></a>
             <?php elseif ($isAdmin): ?>
                 <span class="text-warning fw-bold">Admin</span>
-                <a href="/admin/index_.php?page=deconnexion_admin" class="text-white"><i class="bi bi-box-arrow-right fs-4"></i></a>
+                <a href="./admin/index_.php?page=deconnexion_admin" class="text-white"><i class="bi bi-box-arrow-right fs-4"></i></a>
             <?php else: ?>
                 <a href="./index_.php?page=connexion" class="text-white"><i class="bi bi-person fs-4"></i></a>
                 <a href="./index_.php?page=panier" class="text-white"><i class="bi bi-cart3 fs-4"></i></a>

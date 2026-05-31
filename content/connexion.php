@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <hr>
                 <p class="text-center mb-0">
                     Pas encore de compte ?
-                    <a href="/index_.php?page=inscription">S'inscrire</a>
+                    <a href="./index_.php?page=inscription">S'inscrire</a>
                 </p>
             </div>
         </div>

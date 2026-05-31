@@ -2,10 +2,12 @@
 /**
  * inscription.php - Inscription d'un nouveau client
  */
+
 if (isset($_SESSION['client_id'])) {
     header('Location: ./index_.php?page=mon_compte');
     exit();
 }
+
 
 $erreur  = '';
 $success = '';

@@ -4,6 +4,7 @@
  * Centralise : autoload, session, connexion BD, inclusion dynamique des pages
  * Les balises html/head/body/link/script ne figurent QUE ici.
  */
+
 require_once __DIR__ . '/admin/src/php/utils/all_includes.php';
 require_once __DIR__ . '/admin/src/php/utils/check_connection.php';
 
