@@ -14,7 +14,8 @@ class CommandeDAO {
         return new Commande(
             (int)$row['id_commande'], $row['date_commande'] ?? '',
             (bool)$row['type_livraison'], $row['numero_suivi'] ?? '',
-            $row['adresse_livraison'], $row['statut'], (int)$row['id_client']
+            $row['adresse_livraison'], $row['statut'], (int)$row['id_client'],
+            (float)($row['montant_total'] ?? 0.0) // ← AJOUTE CECI
         );
     }
 

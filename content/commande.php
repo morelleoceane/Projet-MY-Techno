@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php if ($success): ?>
     <div class="alert alert-success fs-5">
         <?= htmlspecialchars($success) ?>
-        <br><a href="/index_.php?page=historique_commandes" class="btn btn-dark mt-2">Voir mes commandes</a>
+        <br><a href="./index_.php?page=historique_commandes" class="btn btn-dark mt-2">Voir mes commandes</a>
     </div>
 <?php else: ?>
 
@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="cgv_ok" id="cgv_cmd" required>
                             <label class="form-check-label" for="cgv_cmd">
-                                J'accepte les <a href="/index_.php?page=cgv" target="_blank">CGV</a> *
+                                J'accepte les <a href="/ProjetMYTechno/index_.php?page=cgv" target="_blank">CGV</a> *
                             </label>
                         </div>
                     </div>

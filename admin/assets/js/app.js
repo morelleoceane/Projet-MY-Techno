@@ -69,7 +69,7 @@ function initRechercheAjax() {
                                         <h6 class="card-title">${a.libelle}</h6>
                                         <p class="text-muted small">${a.marque || '—'} | T.${a.taille || '—'}</p>
                                         <p class="fw-bold text-success fs-5 mt-auto">${parseFloat(a.prix_unitaire).toFixed(2)} €</p>
-                                        <a href="/index_.php?page=article_detail&id=${a.id_article}"
+                                        <a href="/ProjetMYTechno/index_.php?page=article_detail&id=${a.id_article}"
                                            class="btn btn-dark btn-sm mt-2">Voir le produit</a>
                                     </div>
                                 </div>

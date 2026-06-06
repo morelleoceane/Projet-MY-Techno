@@ -10,7 +10,7 @@ $success = $erreur = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['changer_statut'])) {
     $idCmd  = (int)$_POST['id_commande'];
     $statut = $_POST['statut'];
-    $statutsValides = ['en_attente','validee','expedie','livre','annulee'];
+    $statutsValides = ['En attente', 'Validée', 'Expédiée', 'Annulée', 'Remboursée'];
     if (in_array($statut, $statutsValides)) {
         $commandeDAO->updateStatut($idCmd, $statut);
         $success = "Statut de la commande #$idCmd mis à jour.";
@@ -39,12 +39,12 @@ $commandes = $commandeDAO->findAll();
             <?php foreach ($commandes as $cmd):
                 $client = $clientDAO->findById($cmd->getIdClient());
                 $statutBadge = match($cmd->getStatut()) {
-                    'en_attente' => 'warning text-dark',
-                    'validee'    => 'primary',
-                    'expedie'    => 'info text-dark',
-                    'livre'      => 'success',
-                    'annulee'    => 'danger',
-                    default      => 'secondary'
+                    'En attente'  => 'warning text-dark',
+                    'Validée'     => 'primary',
+                    'Expédiée'    => 'info text-dark',
+                    'Annulée'     => 'danger',
+                    'Remboursée'  => 'secondary',
+                    default       => 'secondary'
                 };
             ?>
             <tr>
@@ -70,9 +70,9 @@ $commandes = $commandeDAO->findAll();
                         <select name="statut" id="statut_<?= $cmd->getIdCommande() ?>"
                                 class="form-select form-select-sm"
                                 aria-label="Changer le statut de la commande #<?= $cmd->getIdCommande() ?>">
-                            <?php foreach (['en_attente','validee','expedie','livre','annulee'] as $s): ?>
+                            <?php foreach (['En attente', 'Validée', 'Expédiée', 'Annulée', 'Remboursée'] as $s): ?>
                                 <option value="<?= $s ?>" <?= $cmd->getStatut() === $s ? 'selected' : '' ?>>
-                                    <?= ucfirst($s) ?>
+                                    <?= $s ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>

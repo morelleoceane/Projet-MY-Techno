@@ -11,6 +11,7 @@ class Commande {
     private string $adresse_livraison;
     private string $statut;
     private int    $id_client;
+    private float  $montant_total;
 
     public function __construct(
         int $id = 0, string $date = '', bool $type = false,

@@ -13,7 +13,7 @@ session_start();
 
 define('ROOT_PATH', dirname(__DIR__, 3)); // remonte jusqu'à /admin
 
-define('BASE_URL', '/Projet%20MY%20Techno/');
+define('BASE_URL', '/ProjetMYTechno/');
 
 // ========================
 // AUTOLOADING DES CLASSES

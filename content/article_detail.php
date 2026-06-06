@@ -39,8 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouter_panier'])) {
 
 <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/index_.php">Accueil</a></li>
-        <li class="breadcrumb-item"><a href="/index_.php?page=catalogue">Catalogue</a></li>
+        <li class="breadcrumb-item"><a href="/ProjetMYTechno/index_.php">Accueil</a></li>
+        <li class="breadcrumb-item"><a href="/ProjetMYTechno/index_.php?page=catalogue">Catalogue</a></li>
         <li class="breadcrumb-item active"><?= htmlspecialchars($article->getLibelle()) ?></li>
     </ol>
 </nav>

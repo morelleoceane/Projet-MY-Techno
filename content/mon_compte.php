@@ -107,13 +107,14 @@ $commandes = $commandeDAO->findByClient($client->getIdClient());
                             <?php foreach ($commandes as $cmd): ?>
                                 <?php
                                 $statutBadge = match($cmd->getStatut()) {
-                                    'en_attente' => 'warning',
-                                    'validee', 'Validée' => 'primary',
-                                    'expedie',  'Expédiée' => 'info',
-                                    'livre',    'Livré'    => 'success',
-                                    'Annulée',  'annulee'  => 'danger',
-                                    default => 'secondary'
+                                    'En attente'  => 'warning text-dark',
+                                    'Validée'     => 'primary',
+                                    'Expédiée'    => 'info text-dark',
+                                    'Annulée'     => 'danger',
+                                    'Remboursée'  => 'secondary',
+                                    default       => 'secondary'
                                 };
+                                $annulable = !in_array($cmd->getStatut(), ['Expédiée', 'Annulée', 'Remboursée']);
                                 ?>
                                 <tr>
                                     <td><?= $cmd->getIdCommande() ?></td>
