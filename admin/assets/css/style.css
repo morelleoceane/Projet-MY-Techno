@@ -1,0 +1,136 @@
+/* =============================================
+   style.css – ModeShopping TI2
+   Styles principaux du site
+   ============================================= */
+
+/* ---------- Variables & Reset ---------- */
+:root {
+    --color-primary:   #1a1a2e;
+    --color-secondary: #16213e;
+    --color-accent:    #f9c74f;
+    --color-danger:    #e63946;
+    --color-success:   #2a9d8f;
+    --color-text:      #222222;
+    --color-muted:     #6c757d;
+    --font-main:       'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --border-radius:   8px;
+    --shadow-sm:       0 2px 8px rgba(0,0,0,.1);
+    --shadow-md:       0 4px 18px rgba(0,0,0,.15);
+    --transition:      .25s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+    font-family: var(--font-main);
+    color: var(--color-text);
+    background-color: #f8f9fa;
+    margin: 0;
+}
+
+/* ---------- Header ---------- */
+.site-header {
+    background: var(--color-primary);
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+    box-shadow: var(--shadow-md);
+}
+
+.brand-logo:hover span { opacity: .85; }
+
+/* ---------- Footer ---------- */
+.site-footer {
+        background: #ffffff;
+        color: #222222;
+}
+
+.site-footer a {
+    color: #f9c74f;
+}
+
+
+.site-footer h5,
+.site-footer h6 {
+    color: #ffffff;
+}
+
+/* ---------- Article Cards ---------- */
+.article-card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition), box-shadow var(--transition);
+    overflow: hidden;
+}
+
+.article-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.article-card .card-img-top {
+    transition: transform .4s ease;
+}
+
+.article-card:hover .card-img-top {
+    transform: scale(1.04);
+}
+
+/* ---------- Banner Slide ---------- */
+.banner-slide {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+/* ---------- Buttons ---------- */
+.btn-warning {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #000;
+    font-weight: 600;
+}
+
+.btn-warning:hover {
+    background-color: #e5b437;
+    border-color: #e5b437;
+}
+
+/* ---------- Forms ---------- */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(249, 199, 79, .25);
+}
+
+/* ---------- Tables ---------- */
+.table thead th {
+    letter-spacing: .03em;
+    font-size: .85rem;
+    text-transform: uppercase;
+}
+
+/* ---------- Badges ---------- */
+.badge {
+    font-size: .75rem;
+    border-radius: 20px;
+    padding: .3em .65em;
+}
+
+/* ---------- Navbar ---------- */
+.navbar-nav .nav-link.active {
+    color: var(--color-accent) !important;
+    font-weight: 700;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 767px) {
+    .site-header .search-bar { display: none !important; }
+    .article-card .card-img-top { height: 160px !important; }
+    .banner-slide { min-height: 200px !important; }
+    .banner-slide h1 { font-size: 1.5rem !important; }
+}
+
+@media (max-width: 576px) {
+    .container { padding-left: 12px; padding-right: 12px; }
+}
