@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% block title %}{{ article.libelle }} – ModeShopping Flask{% endblock %}
+
+{% block content %}
+
+<!-- Fil d'Ariane -->
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ url_for('accueil') }}" class="text-decoration-none">
+                <i class="bi bi-house"></i> Accueil
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{{ url_for('catalogue') }}" class="text-decoration-none">Catalogue</a>
+        </li>
+        {% if article.nom_categorie %}
+        <li class="breadcrumb-item">
+            <a href="{{ url_for('catalogue', cat=article.id_categorie) }}"
+               class="text-decoration-none">
+                {{ article.nom_categorie }}
+            </a>
+        </li>
+        {% endif %}
+        <li class="breadcrumb-item active" aria-current="page">
+            {{ article.libelle }}
+        </li>
+    </ol>
+</nav>
+
+<div class="row g-5">
+
+    <!-- ===== PHOTO ===== -->
+    <div class="col-md-5">
+        <div class="position-sticky" style="top:90px;">
+            <div class="rounded-3 overflow-hidden shadow-lg bg-light text-center"
+                 style="height:420px;">
+                <img id="photo-principale"
+                     src="{{ article.photo_principale }}"
+                     alt="{{ article.libelle }}"
+                     class="h-100 w-100"
+                     style="object-fit:cover; transition:transform .4s;">
+            </div>
+
+            <!-- Infos rapides sous la photo -->
+            <div class="mt-3 d-flex gap-2 flex-wrap justify-content-center">
+                <span class="badge bg-dark px-3 py-2">
+                    <i class="bi bi-tag"></i> {{ article.marque or 'Marque inconnue' }}
+                </span>
+                {% if article.taille %}
+                <span class="badge bg-secondary px-3 py-2">
+                    <i class="bi bi-rulers"></i> Taille {{ article.taille }}
+                </span>
+                {% endif %}
+                {% if article.couleur %}
+                <span class="badge bg-secondary px-3 py-2">
+                    <i class="bi bi-palette"></i> {{ article.couleur }}
+                </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== DÉTAILS ===== -->
+    <div class="col-md-7">
+
+        <!-- Catégorie -->
+        {% if article.nom_categorie %}
+        <span class="badge bg-warning text-dark mb-2">
+            {{ article.nom_categorie }}
+        </span>
+        {% endif %}
+
+        <!-- Titre -->
+        <h1 class="h2 fw-bold mb-1">{{ article.libelle }}</h1>
+        <p class="text-muted mb-3">
+            Code article : <code>{{ article.code_article }}</code>
+        </p>
+
+        <hr>
+
+        <!-- Prix -->
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <span class="display-5 fw-bold text-success">
+                {{ "%.2f"|format(article.prix_unitaire) }} €
+            </span>
+            {% if article.stock > 0 %}
+            <span class="badge bg-success px-3 py-2 fs-6">
+                <i class="bi bi-check-circle"></i> En stock
+            </span>
+            {% else %}
+            <span class="badge bg-danger px-3 py-2 fs-6">
+                <i class="bi bi-x-circle"></i> Rupture de stock
+            </span>
+            {% endif %}
+        </div>
+
+        <!-- Caractéristiques -->
+        <div class="card border-0 bg-light rounded-3 mb-4">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3">
+                    <i class="bi bi-info-circle text-warning"></i> Caractéristiques
+                </h5>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <div class="d-flex align-items-center gap-2 p-2 bg-white rounded-2 border">
+                            <i class="bi bi-tag-fill text-warning"></i>
+                            <div>
+                                <div class="small text-muted">Marque</div>
+                                <div class="fw-semibold">{{ article.marque or 'Non renseignée' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center gap-2 p-2 bg-white rounded-2 border">
+                            <i class="bi bi-rulers text-warning"></i>
+                            <div>
+                                <div class="small text-muted">Taille</div>
+                                <div class="fw-semibold">{{ article.taille or 'Non renseignée' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center gap-2 p-2 bg-white rounded-2 border">
+                            <i class="bi bi-palette-fill text-warning"></i>
+                            <div>
+                                <div class="small text-muted">Couleur</div>
+                                <div class="fw-semibold">{{ article.couleur or 'Non renseignée' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center gap-2 p-2 bg-white rounded-2 border">
+                            <i class="bi bi-boxes text-warning"></i>
+                            <div>
+                                <div class="small text-muted">Stock</div>
+                                <div class="fw-semibold
+                                    {% if article.stock == 0 %}text-danger
+                                    {% elif article.stock <= 3 %}text-warning
+                                    {% else %}text-success{% endif %}">
+                                    {{ article.stock }} unité(s)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barre stock visuelle -->
+        {% if article.stock > 0 %}
+        <div class="mb-4">
+            <div class="d-flex justify-content-between small text-muted mb-1">
+                <span>Disponibilité</span>
+                <span>{{ article.stock }} en stock</span>
+            </div>
+            <div class="progress" style="height:8px;">
+                {% set pct = [article.stock * 10, 100] | min %}
+                <div class="progress-bar
+                    {% if article.stock <= 3 %}bg-warning{% else %}bg-success{% endif %}"
+                     role="progressbar" style="width:{{ pct }}%"
+                     aria-valuenow="{{ pct }}" aria-valuemin="0" aria-valuemax="100">
+                </div>
+            </div>
+            {% if article.stock <= 3 %}
+            <p class="small text-warning mt-1">
+                <i class="bi bi-exclamation-triangle"></i>
+                Plus que {{ article.stock }} article(s) disponible(s) !
+            </p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="d-grid gap-2 d-md-flex">
+            {% if article.stock > 0 %}
+           <a href="http://localhost/ProjetMYTechno/index_.php?page=article_detail&id={{ article.id_article }}"
+               class="btn btn-warning btn-lg px-5 fw-bold" target="_blank">
+                <i class="bi bi-cart-plus"></i> Commander sur le site
+            </a>
+            {% else %}
+            <button class="btn btn-secondary btn-lg px-5 fw-bold" disabled>
+                <i class="bi bi-x-circle"></i> Indisponible
+            </button>
+            {% endif %}
+            <a href="{{ url_for('catalogue') }}" class="btn btn-outline-dark btn-lg">
+                <i class="bi bi-arrow-left"></i> Retour
+            </a>
+        </div>
+
+        <!-- Avantages -->
+        <div class="mt-4 pt-3 border-top">
+            <div class="d-flex flex-wrap gap-3 text-muted small">
+                <span><i class="bi bi-truck text-warning"></i> Livraison mondiale</span>
+                <span><i class="bi bi-arrow-counterclockwise text-warning"></i> Retours 30 jours</span>
+                <span><i class="bi bi-shield-check text-warning"></i> Paiement sécurisé</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const img = document.getElementById('photo-principale');
+if (img) {
+    img.addEventListener('mouseenter', () => img.style.transform = 'scale(1.04)');
+    img.addEventListener('mouseleave', () => img.style.transform = 'scale(1)');
+}
+</script>
+{% endblock %}

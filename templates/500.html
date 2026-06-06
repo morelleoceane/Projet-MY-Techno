@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Erreur serveur – ModeShopping Flask{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <div class="display-1 fw-bold text-danger">500</div>
+    <h2 class="fw-bold mt-3">Erreur interne du serveur</h2>
+    <p class="text-muted fs-5">
+        Une erreur inattendue s'est produite. Vérifiez la connexion à la base de données.
+    </p>
+    <a href="{{ url_for('accueil') }}" class="btn btn-dark btn-lg px-5 mt-3">
+        <i class="bi bi-house"></i> Retour à l'accueil
+    </a>
+</div>
+{% endblock %}

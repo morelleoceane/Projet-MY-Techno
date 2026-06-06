@@ -1,0 +1,187 @@
+/* =============================================
+   style.css – ModeShopping Flask TI2
+   ============================================= */
+
+:root {
+    --color-primary:   #1a1a2e;
+    --color-accent:    #f9c74f;
+    --color-success:   #2a9d8f;
+    --color-danger:    #e63946;
+    --border-radius:   10px;
+    --shadow-sm:       0 2px 8px rgba(0,0,0,.08);
+    --shadow-md:       0 6px 20px rgba(0,0,0,.13);
+    --transition:      .25s ease;
+}
+
+/* ---- Base ---- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #222;
+    margin: 0;
+}
+
+/* ---- Header ---- */
+.site-header {
+    background: var(--color-primary);
+    z-index: 1030;
+    box-shadow: 0 2px 12px rgba(0,0,0,.3);
+}
+
+/* ---- Footer ---- */
+.site-footer {
+    background: #1a1a2e;
+    color: #ffffff;
+}
+
+.site-footer {
+    background: #1a1a2e;
+    color: #ffffff;
+}
+
+.site-footer a {
+    color: #f9c74f;
+}
+/* ---- Article Card ---- */
+.article-card {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: transform var(--transition), box-shadow var(--transition);
+    border: none;
+}
+.article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+.article-card .card-img-top {
+    transition: transform .4s ease;
+}
+.article-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+/* ---- Catégorie Card ---- */
+.categorie-card {
+    border-radius: var(--border-radius);
+    transition: transform var(--transition), box-shadow var(--transition);
+    background: #fff;
+}
+.categorie-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+    background: #fffbea;
+}
+
+/* ---- Avantage Card ---- */
+.avantage-card {
+    transition: transform var(--transition), box-shadow var(--transition);
+    background: #fff;
+}
+.avantage-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* ---- Banner ---- */
+.banner-slide {
+    border-radius: var(--border-radius);
+}
+
+/* ---- Ribbon badge ---- */
+.ribbon {
+    position: absolute;
+    top: 12px;
+    right: -2px;
+    background: var(--color-danger);
+    color: #fff;
+    font-size: .7rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 3px 0 0 3px;
+    box-shadow: -2px 2px 5px rgba(0,0,0,.2);
+    z-index: 2;
+}
+
+/* ---- Filtre tag ---- */
+.filter-tag {
+    display: inline-flex;
+    align-items: center;
+    background: var(--color-accent);
+    color: #000;
+    border-radius: 20px;
+    padding: .25em .75em;
+    font-size: .8rem;
+    font-weight: 600;
+    gap: 4px;
+}
+
+/* ---- Sidebar sticky ---- */
+.catalogue-sidebar {
+    position: sticky;
+    top: 80px;
+}
+
+/* ---- Boutons ---- */
+.btn-warning {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #000;
+    font-weight: 600;
+}
+.btn-warning:hover {
+    background-color: #e5b437;
+    border-color: #e5b437;
+}
+
+/* ---- Focus ---- */
+.form-control:focus, .form-select:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(249,199,79,.25);
+}
+
+/* ---- Navbar ---- */
+.navbar-nav .nav-link.active {
+    color: var(--color-accent) !important;
+    font-weight: 700;
+}
+
+/* ---- Breadcrumb ---- */
+.breadcrumb-item + .breadcrumb-item::before {
+    content: "›";
+}
+
+/* ---- Code inline ---- */
+code {
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #c0392b;
+    font-size: .88em;
+}
+
+/* ---- Progress bar ---- */
+.progress { border-radius: 10px; background: #e9ecef; }
+
+/* ---- Tables ---- */
+.table thead th {
+    font-size: .83rem;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 767px) {
+    .site-header .search-bar  { display: none !important; }
+    .catalogue-sidebar        { position: static; }
+    .article-card .card-img-top { height: 160px !important; }
+    .banner-slide               { min-height: 220px !important; }
+    .banner-slide h1            { font-size: 1.4rem !important; }
+    .display-1                  { font-size: 4rem !important; }
+}
+
+@media (max-width: 576px) {
+    .container { padding-inline: 12px; }
+    .ribbon     { font-size: .65rem; }
+}
