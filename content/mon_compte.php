@@ -111,7 +111,6 @@ $commandes = $commandeDAO->findByClient($client->getIdClient());
                                     'Validée'     => 'primary',
                                     'Expédiée'    => 'info text-dark',
                                     'Annulée'     => 'danger',
-                                    'Remboursée'  => 'secondary',
                                     default       => 'secondary'
                                 };
                                 $annulable = !in_array($cmd->getStatut(), ['Expédiée', 'Annulée', 'Remboursée']);
