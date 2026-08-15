@@ -1,0 +1,30 @@
+services:
+
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=projet
+      - DB_USER=anonyme
+      - DB_PASS=anonyme
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=projet
+      - POSTGRES_USER=anonyme
+      - POSTGRES_PASSWORD=anonyme
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./dump.sql:/docker-entrypoint-initdb.d/01_dump.sql
+      - ./dump_insertion.sql:/docker-entrypoint-initdb.d/02_dump_insertion.sql
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

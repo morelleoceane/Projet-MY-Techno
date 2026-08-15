@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+<<<<<<< HEAD
+  <component name="Black">
+    <option name="sdkName" value="Python 3.14 (FlaskProject)" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.14 (FlaskProject)" project-jdk-type="Python SDK" />
+=======
   <component name="ProjectRootManager" version="2">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
+>>>>>>> ff0c58ccfc0f00a41d8031af27aa1753c43ed11e
 </project>
