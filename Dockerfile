@@ -1,6 +1,6 @@
 # Utiliser Python 3.9 (version complète ici par sécurité d'exécution)
 
-FROM python:3.14
+FROM python:3.11.9-slim
 
 
 

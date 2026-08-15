@@ -82,11 +82,14 @@
                 <span class="ribbon" style="background:#e67e22;">Dernières pièces</span>
                 {% endif %}
 
-                <img src="{{ article.photo_principale or url_for('static', filename='images/no_image.jpg') }}"
-                 class="card-img-top"
-                 alt="{{ article.libelle }}"
-                 style="height:220px; object-fit:cover;">
-                            <div class="card-body d-flex flex-column">
+
+                    <div style="height:220px; display:flex; align-items:center; justify-content:center; background:#f8f8f8;">
+                       <img src="{{ article.photo_principale or url_for('static', filename='images/no_image.jpg') }}"
+                        class="card-img-top"
+                        alt="{{ article.libelle }}"
+                        style="height:100%; width:100%; object-fit:contain;">
+                    </div>
+                <div class="card-body d-flex flex-column">
                     <span class="badge bg-light text-dark border mb-2 align-self-start small">
                         {{ article.nom_categorie or 'Non classé' }}
                     </span>
