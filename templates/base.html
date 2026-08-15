@@ -12,7 +12,7 @@
     <!-- CSS personnalisé -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-    {% block extra_css %}{% endblock %}
+    {% block extra_CSS %}{% endblock %}
 </head>
 <body>
 
@@ -29,7 +29,8 @@
         <!-- Barre de recherche -->
         <div class="d-none d-md-block search-bar">
             <form action="{{ url_for('catalogue') }}" method="GET" class="d-flex">
-                <input type="text" name="q" class="form-control me-2"
+                <label for="recherche" class="visually-hidden">Rechercher un article</label>
+                <input type="text" id="recherche" name="q" class="form-control me-2"
                        placeholder="Rechercher un article..."
                        value="{{ request.args.get('q', '') }}">
                 <button class="btn btn-warning" type="submit">
@@ -151,7 +152,7 @@
         </div>
         <hr class="border-secondary">
         <p class="text-center text-white small mb-0">
-            &copy; {{ now.year }} ModeShopping – Projet TI2 Flask
+            &copy; {{ now. year }} ModeShopping – Projet TI2 Flask
         </p>
     </div>
 </footer>
