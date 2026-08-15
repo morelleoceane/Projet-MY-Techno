@@ -1,12 +1,13 @@
 <?php
 /**
  * update_article.php – Endpoint AJAX (Admin)
- * Met à jour un champ d'un article (stock, prix)
- * via le tableau éditable admin
+ * Met à jour un champ d'un article (stock, prix) via le tableau éditable admin
+ * CORRECTION : la requête UPDATE était écrite directement ici (en dehors
+ * d'une classe DAO) et ne passait par aucune fonction PL/pgSQL.
+ * On passe désormais par ArticleDAO::update(), qui appelle modifier_article().
  */
 header('Content-Type: application/json; charset=utf-8');
 require_once dirname(__DIR__, 2) . '/php/utils/all_includes.php';
-require_once dirname(__DIR__, 2) . '/php/utils/check_connection.php';
 
 // Sécurité : admin uniquement
 if (!isset($_SESSION['admin_id'])) {
@@ -42,10 +43,21 @@ if ($champ === 'prix_unitaire' && !is_numeric($valeur)) {
 }
 
 try {
-    $pdo = Connection::getInstance();
-    // Utilise la requête directe (pas de fonction PL/pgSQL pour les mises à jour partielles)
-    $stmt = $pdo->prepare("UPDATE article SET $champ = :val WHERE id_article = :id");
-    $stmt->execute([':val' => $valeur, ':id' => $id_article]);
+    $articleDAO = new ArticleDAO();
+    $article    = $articleDAO->findById($id_article);
+
+    if (!$article) {
+        echo json_encode(['success' => false, 'message' => 'Article introuvable']);
+        exit();
+    }
+
+    if ($champ === 'stock') {
+        $article->setStock((int)$valeur);
+    } else {
+        $article->setPrix((float)$valeur);
+    }
+
+    $articleDAO->update($article);
     echo json_encode(['success' => true]);
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);

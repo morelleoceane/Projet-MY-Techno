@@ -2,10 +2,15 @@
 /**
  * panier.php - Gestion du panier (session)
  */
+// CORRECTION : ces redirections utilisaient un echo "<script>...</script>"
+// en guise de contournement, car le header HTML était déjà envoyé avant.
+// Grâce à ob_start() dans index_.php, un vrai header('Location:') fonctionne
+// maintenant normalement (rien n'est réellement envoyé tant que le buffer
+// n'est pas vidé en fin de script).
 if (isset($_GET['supprimer'])) {
     $idSupp = (int)$_GET['supprimer'];
     unset($_SESSION['panier'][$idSupp]);
-    echo "<script>window.location.href='./index_.php?page=panier';</script>";
+    header('Location: ./index_.php?page=panier');
     exit();
 }
 
@@ -16,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_panier'])) {
             $_SESSION['panier'][(int)$idArt]['quantite'] = $qte;
         }
     }
-    echo "<script>window.location.href='./index_.php?page=panier';</script>";
+    header('Location: ./index_.php?page=panier');
     exit();
 }
 
@@ -52,12 +57,7 @@ $total_final = $total - $remise;
     <div class="alert alert-info">Votre panier est vide. <a href="./index_.php?page=catalogue">Continuer les achats</a></div>
 <?php else: ?>
 
-    <style>
-        .img-panier {
-            object-fit: cover;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Crect width='50' height='50' fill='%23dee2e6'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='20' fill='%236c757d'%3E%3F%3C/text%3E%3C/svg%3E") center/cover no-repeat;
-        }
-    </style>
+    <?php // CORRECTION : la règle .img-panier est désormais dans admin/assets/css/custom.css ?>
 
     <div class="row">
         <div class="col-md-8">
@@ -106,7 +106,7 @@ $total_final = $total - $remise;
                                 <td>
                                     <a href="./index_.php?page=panier&supprimer=<?= $idArt ?>"
                                        class="btn btn-outline-danger btn-sm"
-                                       onclick="return confirm('Supprimer cet article ?')">
+                                       data-confirm="Supprimer cet article ?">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </td>
@@ -140,8 +140,8 @@ $total_final = $total - $remise;
                         <?php if (isset($erreur_promo)): ?>
                             <div class="text-danger small mt-1"><?= $erreur_promo ?></div>
                         <?php elseif (isset($_SESSION['promo_taux'])): ?>
-                            <div class="text-success small mt-1" data-taux="<?= $_SESSION['promo_taux'] ?>">
-                                Code appliqué : -<?= $_SESSION['promo_taux'] ?>%
+                            <div class="text-success small mt-1" data-taux="<?= (int)$_SESSION['promo_taux'] ?>">
+                                Code appliqué : -<?= (int)$_SESSION['promo_taux'] ?>%
                                 (-<span id="remise-affichee"><?= number_format($remise, 2) ?></span> €)
                             </div>
                         <?php endif; ?>
@@ -164,33 +164,6 @@ $total_final = $total - $remise;
         </div>
     </div>
 
-    <script>
-        document.querySelectorAll('input[name^="quantite"]').forEach(input => {
-            input.addEventListener('input', function () {
-                const row  = this.closest('tr');
-                const prix = parseFloat(row.querySelector('[data-prix]').dataset.prix);
-                const qty  = Math.max(1, parseInt(this.value) || 1);
-
-                row.querySelector('.sous-total-ligne').textContent =
-                    (prix * qty).toFixed(2) + ' €';
-
-                let total = 0;
-                document.querySelectorAll('.sous-total-ligne').forEach(td => {
-                    total += parseFloat(td.textContent);
-                });
-
-                const tauxEl = document.querySelector('[data-taux]');
-                const taux   = tauxEl ? parseFloat(tauxEl.dataset.taux) : 0;
-                const remise = total * taux / 100;
-
-                document.getElementById('sous-total').textContent  = total.toFixed(2) + ' €';
-                document.getElementById('total-final').textContent = (total - remise).toFixed(2) + ' €';
-
-                if (document.getElementById('remise-affichee')) {
-                    document.getElementById('remise-affichee').textContent = remise.toFixed(2);
-                }
-            });
-        });
-    </script>
+    <?php // CORRECTION : le script de recalcul en direct est désormais dans admin/assets/js/app.js (initPanierLiveTotal) ?>
 
 <?php endif; ?>

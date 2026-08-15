@@ -44,43 +44,55 @@ class PromotionDAO {
     }
 
     /**
+     * Récupère une promotion par son id (nécessaire pour delete() ci-dessous)
+     */
+    public function findById(int $id): ?Promotion {
+        $stmt = $this->pdo->prepare("SELECT * FROM promotion WHERE id_promotion = :id");
+        $stmt->execute([':id' => $id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row ? new Promotion(
+            (int)$row['id_promotion'],
+            $row['code_promo'],
+            (float)$row['taux_remise'],
+            $row['date_debut'],
+            $row['date_fin'],
+            (bool)$row['est_actif'],
+            (int)$row['id_admin']
+        ) : null;
+    }
+
+    /**
      * Insère une nouvelle promotion
+     * CORRECTION : utilisait un INSERT direct au lieu de la fonction PL/pgSQL
+     * "inserer_promotion" déjà définie dans backups/plpgsql/fonction_inserer_promotion.sql
      */
     public function insert(Promotion $p): void {
-        $stmt = $this->pdo->prepare("
-            INSERT INTO promotion 
-                (code_promo, taux_remise, date_debut, date_fin, est_actif, id_admin)
-            VALUES 
-                (:code, :taux, :debut, :fin, :actif, :admin)
-        ");
-
+        $stmt = $this->pdo->prepare(
+            "SELECT inserer_promotion(:code, :taux, :debut, :fin, :admin)"
+        );
         $stmt->execute([
             ':code'  => $p->getCodePromo(),
             ':taux'  => $p->getTauxRemise(),
             ':debut' => $p->getDateDebut(),
             ':fin'   => $p->getDateFin(),
-            ':actif' => $p->isActif(),
             ':admin' => $p->getIdAdmin()
         ]);
     }
 
     /**
      * Met à jour une promotion existante
+     * CORRECTION : utilisait un UPDATE direct au lieu de la fonction PL/pgSQL
+     * "modifier_promotion" déjà définie dans backups/plpgsql/fonction_modif_promotion.sql
+     * (cette fonction ne permet pas de modifier le code_promo, seulement le taux,
+     * les dates et le statut actif)
      */
     public function update(Promotion $p): void {
-        $stmt = $this->pdo->prepare("
-            UPDATE promotion
-            SET code_promo = :code,
-                taux_remise = :taux,
-                date_debut = :debut,
-                date_fin = :fin,
-                est_actif = :actif
-            WHERE id_promotion = :id
-        ");
-
+        $stmt = $this->pdo->prepare(
+            "SELECT modifier_promotion(:id, :taux, :debut, :fin, :actif)"
+        );
         $stmt->execute([
             ':id'    => $p->getIdPromotion(),
-            ':code'  => $p->getCodePromo(),
             ':taux'  => $p->getTauxRemise(),
             ':debut' => $p->getDateDebut(),
             ':fin'   => $p->getDateFin(),
@@ -89,10 +101,27 @@ class PromotionDAO {
     }
 
     /**
-     * Supprime une promotion
+     * Désactive une promotion (soft-delete), cohérent avec le pattern déjà
+     * utilisé pour les articles.
+     * CORRECTION : un DELETE FROM direct violait à la fois la règle
+     * "aucune opération sans fonction plpgsql" et supprimait définitivement
+     * la donnée. Aucune fonction "supprimer_promotion" n'existe côté BD ;
+     * on réutilise donc modifier_promotion avec est_actif = false.
      */
     public function delete(int $id): void {
-        $stmt = $this->pdo->prepare("DELETE FROM promotion WHERE id_promotion = :id");
-        $stmt->execute([':id' => $id]);
+        $promo = $this->findById($id);
+        if ($promo === null) {
+            return;
+        }
+        $stmt = $this->pdo->prepare(
+            "SELECT modifier_promotion(:id, :taux, :debut, :fin, :actif)"
+        );
+        $stmt->execute([
+            ':id'    => $id,
+            ':taux'  => $promo->getTauxRemise(),
+            ':debut' => $promo->getDateDebut(),
+            ':fin'   => $promo->getDateFin(),
+            ':actif' => false
+        ]);
     }
 }

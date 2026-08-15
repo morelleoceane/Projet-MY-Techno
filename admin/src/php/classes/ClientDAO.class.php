@@ -81,15 +81,28 @@ class ClientDAO {
         ]);
     }
 
-    /** Supprime un client via fonction PL/pgSQL */
+    /**
+     * Supprime un client
+     * ATTENTION : aucune fonction PL/pgSQL "supprimer_client" n'existe dans
+     * la base (voir backups/plpgsql/) — seule bannir_client() est définie.
+     * Il faudra ajouter une fonction plpgsql dédiée côté BD pour rendre
+     * cette opération pleinement conforme (insert/update/delete → plpgsql).
+     * En attendant, la requête reste correctement encapsulée dans la DAO.
+     */
     public function delete(int $id): void {
-        $stmt = $this->pdo->prepare("SELECT supprimer_client(:id)");
+        $stmt = $this->pdo->prepare("DELETE FROM client WHERE id_client = :id");
         $stmt->execute([':id' => $id]);
     }
 
-    /** Bannit un client */
+    /**
+     * Bannit un client via la fonction PL/pgSQL bannir_client()
+     * CORRECTION : la version précédente faisait un UPDATE direct sur une
+     * colonne "banni" qui n'existe pas (la vraie colonne est "est_banni"),
+     * ce qui provoquait une erreur SQL. Elle passe désormais par la
+     * fonction bannir_client() déjà définie dans backups/plpgsql/fonction_bannir.sql
+     */
     public function bannir(int $id): void {
-        $stmt = $this->pdo->prepare("UPDATE client SET banni=TRUE WHERE id_client=:id");
+        $stmt = $this->pdo->prepare("SELECT bannir_client(:id)");
         $stmt->execute([':id' => $id]);
     }
 

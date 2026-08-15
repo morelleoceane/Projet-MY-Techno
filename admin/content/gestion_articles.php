@@ -185,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                class="btn btn-warning btn-sm">✏️</a>
                             <a href="?page=gestion_articles&supprimer=<?= $a->getIdArticle() ?>"
                                class="btn btn-danger btn-sm"
-                               onclick="return confirm('Désactiver cet article ?')">🗑️</a>
+                               data-confirm="Désactiver cet article ?">🗑️</a>
                         </td>
                     </tr>
                     <?php endforeach; ?>

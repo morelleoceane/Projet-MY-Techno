@@ -2,8 +2,8 @@
 /**
  * historique_commandes.php
  */
-require_once __DIR__ . '/../admin/src/php/utils/check_connection.php';
-checkClientConnecte();
+// CORRECTION : SecuriteAccess est une classe autochargée, plus besoin de require_once
+SecuriteAccess::checkClientConnecte();
 
 $commandeDAO = new CommandeDAO();
 
@@ -54,13 +54,18 @@ $commandes = $commandeDAO->findByClient($_SESSION['client_id']);
             <tbody>
             <?php foreach ($commandes as $cmd): ?>
                 <?php
+                // CORRECTION : les clés ('en_attente', 'expedie', ...) ne
+                // correspondaient jamais aux vraies valeurs stockées en base
+                // ('En attente', 'Expédiée', ...) ; le badge restait donc
+                // toujours gris. Alignement sur les valeurs réelles
+                // (cf. contrainte CHECK de la table commande et gestion_commandes.php).
                 $statutBadge = match($cmd->getStatut()) {
-                    'en_attente'         => 'warning',
-                    'validee', 'Validée' => 'primary',
-                    'expedie', 'Expédiée'=> 'info',
-                    'livre',   'Livré'   => 'success',
-                    'annulee', 'Annulée' => 'danger',
-                    default              => 'secondary'
+                    'En attente' => 'warning',
+                    'Validée'    => 'primary',
+                    'Expédiée'   => 'info',
+                    'Remboursée' => 'secondary',
+                    'Annulée'    => 'danger',
+                    default      => 'secondary'
                 };
                 $annulable = !in_array($cmd->getStatut(), ['Expédiée', 'Annulée', 'Remboursée']);
                 ?>
@@ -74,7 +79,7 @@ $commandes = $commandeDAO->findByClient($_SESSION['client_id']);
                         <?php if ($annulable): ?>
                             <a href="/ProjetMYTechno/index_.php?page=historique_commandes&annuler=<?= $cmd->getIdCommande() ?>"
                                class="btn btn-outline-danger btn-sm"
-                               onclick="return confirm('Annuler cette commande ?')">
+                               data-confirm="Annuler cette commande ?">
                                 Annuler
                             </a>
                         <?php else: ?>

@@ -3,10 +3,11 @@
  * index_.php - Point d'entrée PUBLIC
  * Centralise : autoload, session, connexion BD, inclusion dynamique des pages
  * Les balises html/head/body/link/script ne figurent QUE ici.
+ * CORRECTION : ob_start() permet aux pages de contenu d'utiliser un vrai
+ * header('Location:...') même après que le header/menu ont déjà été "affichés"
+ * (rien n'est réellement envoyé au navigateur tant que le buffer n'est pas vidé).
  */
-
-require_once __DIR__ . '/admin/src/php/utils/all_includes.php';
-require_once __DIR__ . '/admin/src/php/utils/check_connection.php';
+ob_start();
 
 // Page demandée (défaut : accueil)
 $page = $_GET['page'] ?? 'accueil';
@@ -22,7 +23,7 @@ $pages_publiques = [
 $pages_protegees = ['panier', 'commande', 'mon_compte', 'historique_commandes'];
 
 if (in_array($page, $pages_protegees)) {
-    checkClientConnecte();
+    SecuriteAccess::checkClientConnecte();
 }
 
 if (!in_array($page, $pages_publiques)) {
@@ -42,3 +43,4 @@ if (!file_exists($fichier)) {
 </main>
 
 <?php require_once __DIR__ . '/admin/src/php/utils/footer.php'; ?>
+<?php ob_end_flush(); ?>

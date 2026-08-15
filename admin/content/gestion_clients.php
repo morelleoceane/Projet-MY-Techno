@@ -44,11 +44,11 @@ $clients = $clientDAO->findAll();
                     <?php if (!$client->isBanni()): ?>
                     <a href="?page=gestion_clients&bannir=<?= $client->getIdClient() ?>"
                        class="btn btn-warning btn-sm"
-                       onclick="return confirm('Bannir ce client ?')">Bannir</a>
+                       data-confirm="Bannir ce client ?">Bannir</a>
                     <?php endif; ?>
                     <a href="?page=gestion_clients&supprimer=<?= $client->getIdClient() ?>"
                        class="btn btn-danger btn-sm"
-                       onclick="return confirm('Supprimer définitivement ce client ?')">
+                       data-confirm="Supprimer définitivement ce client ?">
                         <i class="bi bi-trash"></i>
                     </a>
                 </td>

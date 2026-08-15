@@ -52,6 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouter_panier'])) {
 <div class="row">
     <div class="col-md-5">
         <?php
+        // CORRECTION : $index n'existait pas ici (pas de boucle) — variable
+        // indéfinie. On utilise l'id de l'article, comme dans catalogue.php.
         $fallbackImages = [
                 'https://www.chaudici.com/images/color/Jean-Slim-Homme-Jeunesse-Slim-Tendance-Homme-Pantalon-2064-c00.jpg',
                 'https://img-lcwaikiki.mncdn.com/mnresize/1020/1360/pim/productimages/20231/6278147/v1/l_20231-s39518z8-dfl-98-76-97-189_a.jpg',
@@ -60,12 +62,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouter_panier'])) {
         ];
         $imgSrc = !empty($article->getPhoto())
                 ? $article->getPhoto()
-                : $fallbackImages[$index % count($fallbackImages)];
+                : $fallbackImages[$article->getIdArticle() % count($fallbackImages)];
         ?>
         <img src="<?= $imgSrc ?>"
-             class="img-fluid rounded shadow"
-             alt="<?= htmlspecialchars($article->getLibelle()) ?>"
-             style="max-height:450px; width:100%; object-fit:contain; background:#f8f8f8;">
+             class="img-fluid rounded shadow article-detail-img"
+             alt="<?= htmlspecialchars($article->getLibelle()) ?>">
     </div>
     <div class="col-md-7">
         <h1 class="h2 mb-2"><?= htmlspecialchars($article->getLibelle()) ?></h1>

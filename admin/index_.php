@@ -2,9 +2,11 @@
 /**
  * index_.php - Point d'entrée ADMINISTRATION
  * Les balises html/head/body/link/script ne figurent QUE ici.
+ * CORRECTION : ob_start() pour permettre un vrai header('Location:...')
+ * depuis les pages de contenu, même après le header/menu déjà "affichés".
  */
-require_once __DIR__ . '/src/php/utils/all_includes.php';
-require_once __DIR__ . '/src/php/utils/check_connection.php';
+ob_start();
+
 
 $page = $_GET['page'] ?? 'connexion_admin';
 
@@ -16,7 +18,7 @@ $pages_admin = [
 
 // Toutes les pages sauf connexion_admin nécessitent d'être admin
 if ($page !== 'connexion_admin' && $page !== 'deconnexion_admin') {
-    checkAdminConnecte();
+    SecuriteAccess::checkAdminConnecte();
 }
 
 if (!in_array($page, $pages_admin)) {
@@ -36,3 +38,4 @@ if (!file_exists($fichier)) {
 </main>
 
 <?php require_once __DIR__ . '/src/php/utils/footer.php'; ?>
+<?php ob_end_flush(); ?>

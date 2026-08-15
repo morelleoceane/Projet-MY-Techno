@@ -10,12 +10,18 @@ class CommandeDAO {
         $this->pdo = Connection::getInstance();
     }
 
+    /**
+     * CORRECTION : la colonne "type_livraison" est de type TEXT en base
+     * (voir backups/Dump/dump.sql) alors que la classe Commande la traite
+     * comme un booléen (livraison express ou non). On convertit donc le
+     * bool PHP en libellé texte ('Express' / 'Standard') pour la lecture.
+     */
     private function rowToCommande(array $row): Commande {
         return new Commande(
             (int)$row['id_commande'], $row['date_commande'] ?? '',
-            (bool)$row['type_livraison'], $row['numero_suivi'] ?? '',
+            ($row['type_livraison'] ?? '') === 'Express', $row['numero_suivi'] ?? '',
             $row['adresse_livraison'], $row['statut'], (int)$row['id_client'],
-            (float)($row['montant_total'] ?? 0.0) // ← AJOUTE CECI
+            (float)($row['montant_total'] ?? 0.0)
         );
     }
 
@@ -39,15 +45,19 @@ class CommandeDAO {
         return $row ? $this->rowToCommande($row) : null;
     }
 
-    /** Crée une commande via PL/pgSQL, retourne l'id */
+    /**
+     * Crée une commande via PL/pgSQL, retourne l'id
+     * CORRECTION : la fonction plpgsql attend un TEXTE pour p_type
+     * (colonne type_livraison TEXT), pas un booléen brut.
+     */
     public function insert(Commande $commande): int {
         $stmt = $this->pdo->prepare(
             "SELECT inserer_commande(:type, :adresse, :total, :cgv, :client) AS id"
         );
         $stmt->execute([
-            ':type'    => $commande->isTypeLivraison(),
+            ':type'    => $commande->isTypeLivraison() ? 'Express' : 'Standard',
             ':adresse' => $commande->getAdresseLivraison(),
-            ':total'   => $commande->getTotal(),  // voir ci-dessous
+            ':total'   => $commande->getTotal(),
             ':cgv'     => true,
             ':client'  => $commande->getIdClient(),
         ]);

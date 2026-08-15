@@ -76,6 +76,24 @@ class ArticleDAO {
         return array_map([$this, 'rowToArticle'], $stmt->fetchAll());
     }
 
+    /**
+     * Recherche textuelle libre (utilisée par l'endpoint AJAX recherche_articles.php)
+     * CORRECTION : cette requête était écrite directement dans le fichier ajax,
+     * en violation de la règle "aucune requête SQL en dehors des classes DAO".
+     */
+    public function search(string $q): array {
+        $sql = "SELECT * FROM article WHERE est_actif = TRUE";
+        $params = [];
+        if ($q !== '') {
+            $sql .= " AND (libelle ILIKE :q OR marque ILIKE :q OR couleur ILIKE :q)";
+            $params[':q'] = '%' . $q . '%';
+        }
+        $sql .= " ORDER BY libelle ASC LIMIT 50";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return array_map([$this, 'rowToArticle'], $stmt->fetchAll());
+    }
+
     /** Insert via PL/pgSQL */
     public function insert(Article $a): void {
         $stmt = $this->pdo->prepare(
@@ -112,9 +130,14 @@ class ArticleDAO {
         ]);
     }
 
-    /** Soft-delete via PL/pgSQL */
+    /**
+     * Soft-delete via PL/pgSQL
+     * CORRECTION : la fonction appelait "supprimer_article", qui n'existe pas
+     * dans la base (voir backups/plpgsql/fonction_desac_artcl.sql).
+     * La fonction réellement définie est "desactiver_article".
+     */
     public function delete(int $id): void {
-        $stmt = $this->pdo->prepare("SELECT supprimer_article(:id)");
+        $stmt = $this->pdo->prepare("SELECT desactiver_article(:id)");
         $stmt->execute([':id' => $id]);
     }
 }

@@ -3,9 +3,6 @@
  * Classe CategorieArticleDAO
  * Fichier : CategorieArticleDAO.class.php
  */
-require_once __DIR__ . '/CategorieArticle.class.php';
-require_once __DIR__ . '/Connection.class.php';
-
 class CategorieArticleDAO {
     private PDO $pdo;
 

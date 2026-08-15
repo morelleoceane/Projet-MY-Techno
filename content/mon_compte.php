@@ -2,8 +2,8 @@
 /**
  * mon_compte.php - Tableau de bord client
  */
-require_once __DIR__ . '/../admin/src/php/utils/check_connection.php';
-checkClientConnecte();
+// CORRECTION : SecuriteAccess est une classe autochargée, plus besoin de require_once
+SecuriteAccess::checkClientConnecte();
 
 $clientDAO   = new ClientDAO();
 $commandeDAO = new CommandeDAO();
@@ -124,15 +124,11 @@ $commandes = $commandeDAO->findByClient($client->getIdClient());
                                     </span>
                                     </td>
                                     <td class="small"><?= htmlspecialchars(substr($cmd->getAdresseLivraison(), 0, 25)) ?>...</td>
-                                    <td>
-                                        <?php
-                                        $statut = $cmd->getStatut();
-                                        $annulable = !in_array($statut, ['expedie', 'Expédiée', 'livre', 'Livré', 'Annulée', 'annulee']);
-                                        ?>
-                                        <?php if ($annulable): ?>
+                                <td>
+                                    <?php if ($annulable): ?>
                                             <a href="./index_.php?page=historique_commandes&annuler=<?= $cmd->getIdCommande() ?>"
                                                class="btn btn-outline-danger btn-sm"
-                                               onclick="return confirm('Annuler cette commande ?')">
+                                               data-confirm="Annuler cette commande ?">
                                                 Annuler
                                             </a>
                                         <?php else: ?>

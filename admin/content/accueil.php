@@ -22,8 +22,7 @@ $fallbackImages = [
 <div id="bannierePrincipale" class="carousel slide mb-5" data-bs-ride="carousel">
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <div class="banner-slide d-flex align-items-center justify-content-center text-white text-center"
-                 style="background: linear-gradient(135deg,#1a1a2e,#16213e); min-height:350px;">
+            <div class="banner-slide banner-slide-1 d-flex align-items-center justify-content-center text-white text-center">
                 <div>
                     <h1 class="display-4 fw-bold">Nouvelle Collection 2026</h1>
                     <p class="lead">Vêtements, Chaussures &amp; Accessoires pour tous les styles</p>
@@ -34,8 +33,7 @@ $fallbackImages = [
             </div>
         </div>
         <div class="carousel-item">
-            <div class="banner-slide d-flex align-items-center justify-content-center text-white text-center"
-                 style="background: linear-gradient(135deg,#0f3460,#533483); min-height:350px;">
+            <div class="banner-slide banner-slide-2 d-flex align-items-center justify-content-center text-white text-center">
                 <div>
                     <h1 class="display-4 fw-bold">Soldes jusqu'à -50%</h1>
                     <p class="lead">Profitez de nos offres exclusives sur la mode femme &amp; homme</p>
@@ -74,36 +72,19 @@ $fallbackImages = [
     <h2 class="text-center mb-4">Articles Vedettes</h2>
     <div class="row g-4" id="articlesVedettes">
         <?php foreach ($vedettes as $index => $article):
-            $photo = $article->getPhoto();
-            if (!empty($photo)) {
-                $src = '/admin/assets/images/' . htmlspecialchars($photo);
-            }else {
-                $src = $fallbackImages[$index % count($fallbackImages)];
-            }
-            $fallbackImages = [
-                    'https://www.chaudici.com/images/color/Jean-Slim-Homme-Jeunesse-Slim-Tendance-Homme-Pantalon-2064-c00.jpg',
-                    'https://img-lcwaikiki.mncdn.com/mnresize/1020/1360/pim/productimages/20231/6278147/v1/l_20231-s39518z8-dfl-98-76-97-189_a.jpg',
-                    'https://robe-avenue.com/cdn/shop/files/preview_images/8e78043e6de74605aed210e2a4bab536.thumbnail.0000000000.jpg?v=1748275525&width=1000',
-                    'https://www.mytheresa.com/media/1094/1238/100/44/P01121090.jpg',
-            ];
-
+            // CORRECTION : le calcul de $src/$fallback était fait deux fois de
+            // suite (code mort) et $fallbackImages était même redéclaré à
+            // chaque itération de la boucle. Nettoyage en un seul passage clair.
             $fallback = $fallbackImages[$index % count($fallbackImages)];
-
-// Si pas de photo en base, utilise directement le fallback externe
-            $photo = $article->getPhoto();
-            if (empty($photo)) {
-                $src = $fallback;
-            } else {
-                $src = '/admin/assets/images/' . htmlspecialchars($photo);
-            }
+            $photo    = $article->getPhoto();
+            $src      = !empty($photo) ? '/admin/assets/images/' . htmlspecialchars($photo) : $fallback;
             ?>
             <div class="col-6 col-md-3">
                 <div class="card h-100 shadow-sm article-card">
                     <img src="<?= $src ?>"
-                         class="card-img-top article-img"
+                         class="card-img-top article-img article-img-thumb"
                          alt="<?= htmlspecialchars($article->getLibelle()) ?>"
-                         data-fallback="<?= $fallback ?>"
-                         style="height:220px; object-fit:contain; object-position:center; display:block; margin:0 auto; width:100%; background:#f8f8f8;">
+                         data-fallback="<?= $fallback ?>">
                     <div class="card-body d-flex flex-column">
                         <h6 class="card-title"><?= htmlspecialchars($article->getLibelle()) ?></h6>
                         <p class="text-muted small mb-1">
@@ -146,11 +127,4 @@ $fallbackImages = [
         </div>
     </div>
 </section>
-
-<script>
-    document.querySelectorAll('.article-img').forEach(img => {
-        img.addEventListener('error', function () {
-            this.src = this.dataset.fallback;
-        });
-    });
-</script>
+<?php ?>

@@ -236,6 +236,54 @@ function updateCartBadge() {
 }
 
 /* ============================================================
+   6. FALLBACK IMAGE ARTICLE (erreur de chargement)
+      CORRECTION : ce code figurait auparavant dans des balises <script>
+      inline au sein de pages PHP (catalogue.php, admin/content/accueil.php),
+      en violation de la règle "aucun script en dehors d'un fichier .js"
+   ============================================================ */
+function initArticleImageFallback() {
+    document.querySelectorAll('.article-img').forEach(img => {
+        img.addEventListener('error', function () {
+            this.src = this.dataset.fallback;
+        });
+    });
+}
+
+/* ============================================================
+   7. RECALCUL EN DIRECT DU PANIER (quantités modifiées)
+      CORRECTION : ce code figurait auparavant dans une balise <script>
+      inline au sein de content/panier.php
+   ============================================================ */
+function initPanierLiveTotal() {
+    document.querySelectorAll('input[name^="quantite"]').forEach(input => {
+        input.addEventListener('input', function () {
+            const row  = this.closest('tr');
+            const prix = parseFloat(row.querySelector('[data-prix]').dataset.prix);
+            const qty  = Math.max(1, parseInt(this.value) || 1);
+
+            row.querySelector('.sous-total-ligne').textContent =
+                (prix * qty).toFixed(2) + ' €';
+
+            let total = 0;
+            document.querySelectorAll('.sous-total-ligne').forEach(td => {
+                total += parseFloat(td.textContent);
+            });
+
+            const tauxEl = document.querySelector('[data-taux]');
+            const taux   = tauxEl ? parseFloat(tauxEl.dataset.taux) : 0;
+            const remise = total * taux / 100;
+
+            document.getElementById('sous-total').textContent  = total.toFixed(2) + ' €';
+            document.getElementById('total-final').textContent = (total - remise).toFixed(2) + ' €';
+
+            if (document.getElementById('remise-affichee')) {
+                document.getElementById('remise-affichee').textContent = remise.toFixed(2);
+            }
+        });
+    });
+}
+
+/* ============================================================
    INITIALISATION
    ============================================================ */
 document.addEventListener('DOMContentLoaded', function () {
@@ -243,6 +291,8 @@ document.addEventListener('DOMContentLoaded', function () {
     initTableauEditable();
     initVerifPromo();
     initDeleteConfirm();
+    initArticleImageFallback();
+    initPanierLiveTotal();
 
     // Mise à jour badge panier toutes les 30s
     updateCartBadge();

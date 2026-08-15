@@ -119,9 +119,8 @@ $fallbackImages = [
                     <div class="col-6 col-md-4">
                         <div class="card h-100 shadow-sm article-card">
                             <img src="<?= $imgSrc ?>"
-                                 class="card-img-top article-img"
-                                 alt="<?= htmlspecialchars($article->getLibelle()) ?>"
-                                 style="height:200px; object-fit:contain; background:#f8f8f8;">
+                                 class="card-img-top article-img article-img-thumb"
+                                 alt="<?= htmlspecialchars($article->getLibelle()) ?>">
                             <div class="card-body d-flex flex-column">
                                 <h6 class="card-title"><?= htmlspecialchars($article->getLibelle()) ?></h6>
                                 <p class="text-muted small">
@@ -145,11 +144,4 @@ $fallbackImages = [
         <?php endif; ?>
     </div>
 </div>
-
-<script>
-    document.querySelectorAll('.article-img').forEach(img => {
-        img.addEventListener('error', function () {
-            this.src = this.dataset.fallback;
-        });
-    });
-</script>
+<?php // CORRECTION : le script de fallback image est désormais dans admin/assets/js/app.js (initArticleImageFallback) ?>

@@ -1,11 +1,9 @@
 <?php
 /**
  * accueil.php - Page d'accueil publique
+ * CORRECTION : les classes sont autochargées (spl_autoload_register dans
+ * all_includes.php) ; les require_once manuels ci-dessous ont été retirés.
  */
-require_once __DIR__ . '/../admin/src/php/classes/Connection.class.php';
-require_once __DIR__ . '/../admin/src/php/classes/Article.class.php';
-require_once __DIR__ . '/../admin/src/php/classes/ArticleDAO.class.php';
-require_once __DIR__ . '/../admin/src/php/classes/CategorieArticleDAO.class.php';
 
 $articleDAO = new ArticleDAO();
 $articles   = $articleDAO->findActifs();
@@ -26,8 +24,7 @@ $fallbackImages = [
 <div id="bannierePrincipale" class="carousel slide mb-5" data-bs-ride="carousel">
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <div class="banner-slide d-flex align-items-center justify-content-center text-white text-center"
-                 style="background: linear-gradient(135deg,#1a1a2e,#16213e); min-height:350px;">
+            <div class="banner-slide banner-slide-1 d-flex align-items-center justify-content-center text-white text-center">
                 <div>
                     <h1 class="display-4 fw-bold">Nouvelle Collection 2026</h1>
                     <p class="lead">Vêtements, Chaussures &amp; Accessoires pour tous les styles</p>
@@ -38,8 +35,7 @@ $fallbackImages = [
             </div>
         </div>
         <div class="carousel-item">
-            <div class="banner-slide d-flex align-items-center justify-content-center text-white text-center"
-                 style="background: linear-gradient(135deg,#0f3460,#533483); min-height:350px;">
+            <div class="banner-slide banner-slide-2 d-flex align-items-center justify-content-center text-white text-center">
                 <div>
                     <h1 class="display-4 fw-bold">Soldes jusqu'à -50%</h1>
                     <p class="lead">Profitez de nos offres exclusives sur la mode femme &amp; homme</p>
@@ -86,9 +82,8 @@ $fallbackImages = [
             <div class="col-6 col-md-3">
                 <div class="card h-100 shadow-sm article-card">
                     <img src="<?= $src ?>"
-                         class="card-img-top article-img"
-                         alt="<?= htmlspecialchars($article->getLibelle()) ?>"
-                         style="height:220px; object-fit:contain; object-position:center; width:100%; background:#f8f8f8;">
+                         class="card-img-top article-img article-img-thumb"
+                         alt="<?= htmlspecialchars($article->getLibelle()) ?>">
                     <div class="card-body d-flex flex-column">
                         <h6 class="card-title"><?= htmlspecialchars($article->getLibelle()) ?></h6>
                         <p class="text-muted small mb-1">

@@ -93,3 +93,42 @@
     border-radius: 3px 0 0 3px;
     box-shadow: -2px 2px 5px rgba(0,0,0,.2);
 }
+
+/* ---------- Bannière page d'accueil ----------
+   CORRECTION : ces styles étaient écrits en inline (style="...") dans
+   content/accueil.php et admin/content/accueil.php, en violation de la
+   règle "tous les styles sont définis dans un fichier .css". */
+.banner-slide-1 {
+    background: linear-gradient(135deg,#1a1a2e,#16213e);
+    min-height: 350px;
+}
+
+.banner-slide-2 {
+    background: linear-gradient(135deg,#0f3460,#533483);
+    min-height: 350px;
+}
+
+/* ---------- Vignette article (catalogue, accueil, admin) ---------- */
+.article-img-thumb {
+    height: 220px;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    background: #f8f8f8;
+}
+
+/* ---------- Image détail article ---------- */
+.article-detail-img {
+    max-height: 450px;
+    width: 100%;
+    object-fit: contain;
+    background: #f8f8f8;
+}
+
+/* ---------- Panier : image miniature ---------- */
+.img-panier {
+    object-fit: cover;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Crect width='50' height='50' fill='%23dee2e6'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='20' fill='%236c757d'%3E%3F%3C/text%3E%3C/svg%3E") center/cover no-repeat;
+}

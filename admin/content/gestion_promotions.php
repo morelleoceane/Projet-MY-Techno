@@ -1,6 +1,13 @@
 <?php
 /**
  * gestion_promotions.php - CRUD promotions (admin)
+ * CORRECTION : new Promotion($id, $code, $taux, $_SESSION['admin_id']) passait
+ * l'id admin comme 4e argument positionnel, qui correspond à $date_debut
+ * (string) dans le constructeur de Promotion, pas à $id_admin (7e argument).
+ * Cela provoquait une erreur SQL (id admin envoyé comme DATE à la fonction
+ * plpgsql inserer_promotion/modifier_promotion). Ajout des champs date_debut
+ * et date_fin, obligatoires côté fonctions plpgsql, et correction de l'ordre
+ * des arguments.
  */
 $promoDAO  = new PromotionDAO();
 $success = $erreur = '';
@@ -8,7 +15,7 @@ $promo_edit = null;
 
 if (isset($_GET['supprimer'])) {
     $promoDAO->delete((int)$_GET['supprimer']);
-    $success = "Promotion supprimée.";
+    $success = "Promotion désactivée.";
 }
 if (isset($_GET['editer'])) {
     $promos = $promoDAO->findAll();
@@ -18,19 +25,24 @@ if (isset($_GET['editer'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id   = (int)($_POST['id_promotion'] ?? 0);
-    $code = trim($_POST['code_promo'] ?? '');
-    $taux = (int)($_POST['taux_remise'] ?? 0);
-    if (!$code || $taux < 1 || $taux > 100) {
-        $erreur = "Code et taux valide (1-100) requis.";
+    $id         = (int)($_POST['id_promotion'] ?? 0);
+    $code       = trim($_POST['code_promo'] ?? '');
+    $taux       = (int)($_POST['taux_remise'] ?? 0);
+    $date_debut = trim($_POST['date_debut'] ?? '');
+    $date_fin   = trim($_POST['date_fin'] ?? '');
+
+    if (!$code || $taux < 1 || $taux > 100 || !$date_debut || !$date_fin) {
+        $erreur = "Code, taux valide (1-100) et dates de début/fin sont requis.";
+    } elseif ($date_debut > $date_fin) {
+        $erreur = "La date de début doit être antérieure à la date de fin.";
     } else {
         try {
             if ($id > 0) {
-                $p = new Promotion($id, $code, $taux, $_SESSION['admin_id']);
+                $p = new Promotion($id, $code, $taux, $date_debut, $date_fin, true, (int)$_SESSION['admin_id']);
                 $promoDAO->update($p);
                 $success = "Promotion modifiée.";
             } else {
-                $p = new Promotion(0, $code, $taux, $_SESSION['admin_id']);
+                $p = new Promotion(0, $code, $taux, $date_debut, $date_fin, true, (int)$_SESSION['admin_id']);
                 $promoDAO->insert($p);
                 $success = "Promotion créée.";
             }
@@ -68,6 +80,16 @@ $promotions = $promoDAO->findAll();
                         <input type="number" name="taux_remise" id="taux_remise" class="form-control" min="1" max="100" required
                                value="<?= $promo_edit?->getTauxRemise() ?? '' ?>">
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="date_debut">Date de début *</label>
+                        <input type="date" name="date_debut" id="date_debut" class="form-control" required
+                               value="<?= htmlspecialchars($promo_edit?->getDateDebut() ?? '') ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="date_fin">Date de fin *</label>
+                        <input type="date" name="date_fin" id="date_fin" class="form-control" required
+                               value="<?= htmlspecialchars($promo_edit?->getDateFin() ?? '') ?>">
+                    </div>
                     <button type="submit" class="btn btn-warning w-100">
                         <?= $promo_edit ? 'Modifier' : 'Créer' ?>
                     </button>
@@ -82,20 +104,22 @@ $promotions = $promoDAO->findAll();
     <div class="col-md-8">
         <table class="table table-hover align-middle">
             <thead class="table-dark">
-                <tr><th>ID</th><th>Code</th><th>Remise</th><th>Actions</th></tr>
+                <tr><th>ID</th><th>Code</th><th>Remise</th><th>Période</th><th>Actif</th><th>Actions</th></tr>
             </thead>
             <tbody>
                 <?php foreach ($promotions as $p): ?>
-                <tr>
+                <tr class="<?= !$p->isActif() ? 'table-secondary text-muted' : '' ?>">
                     <td><?= $p->getIdPromotion() ?></td>
                     <td><code><?= htmlspecialchars($p->getCodePromo()) ?></code></td>
                     <td><span class="badge bg-success"><?= $p->getTauxRemise() ?>%</span></td>
+                    <td class="small"><?= htmlspecialchars($p->getDateDebut()) ?> → <?= htmlspecialchars($p->getDateFin()) ?></td>
+                    <td><?= $p->isActif() ? '✅' : '❌' ?></td>
                     <td>
                         <a href="?page=gestion_promotions&editer=<?= $p->getIdPromotion() ?>"
                            class="btn btn-warning btn-sm">✏️</a>
                         <a href="?page=gestion_promotions&supprimer=<?= $p->getIdPromotion() ?>"
                            class="btn btn-danger btn-sm"
-                           onclick="return confirm('Supprimer cette promotion ?')">🗑️</a>
+                           data-confirm="Désactiver cette promotion ?">🗑️</a>
                     </td>
                 </tr>
                 <?php endforeach; ?>

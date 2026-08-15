@@ -9,6 +9,12 @@
  * - Inclure la connexion DB
  * Ce fichier est inclus dans CHAQUE index.php (public et admin)
  */
+// CORRECTION : sécurisation du cookie de session (empêche l'accès en JS,
+// limite les envois cross-site) avant de démarrer la session.
+session_set_cookie_params([
+    'httponly' => true,
+    'samesite' => 'Lax',
+]);
 session_start();
 
 define('ROOT_PATH', dirname(__DIR__, 3)); // remonte jusqu'à /admin

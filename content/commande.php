@@ -2,8 +2,8 @@
 /**
  * commande.php - Validation de la commande (client connecté requis)
  */
-require_once __DIR__ . '/../admin/src/php/utils/check_connection.php';
-checkClientConnecte();
+// CORRECTION : SecuriteAccess est une classe autochargée, plus besoin de require_once
+SecuriteAccess::checkClientConnecte();
 
 $panier = $_SESSION['panier'] ?? [];
 if (empty($panier)) {
@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <hr>
                 <?php if ($remise > 0): ?>
                 <div class="d-flex justify-content-between text-success">
-                    <span>Remise (<?= $_SESSION['promo_taux'] ?>%)</span>
+                    <span>Remise (<?= (int)$_SESSION['promo_taux'] ?>%)</span>
                     <span>-<?= number_format($remise, 2) ?> €</span>
                 </div>
                 <?php endif; ?>
